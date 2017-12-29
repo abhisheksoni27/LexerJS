@@ -64,67 +64,47 @@ function longestCommonSequences(tokenList) {
     const minTokenLength = Math.min(...tokenLengthForFiles);
 
     let iterator = minTokenLength;
-    const result = [];
+    let result = [];
     const commonSequences = [];
 
     while (iterator > 0) {
 
-        for (let i = 0; i < TokensOfFiles[0].tokens.length; i++) {
+        for (let i = 0; i < totalFiles; i++) {
+            let currentFile = TokensOfFiles[i];
+            for (let j = 0; j < totalFiles; j++) {
 
-            if (i + iterator <= TokensOfFiles[0].tokens.length) {
+                //Same File
+                if (i == j) break;
 
-                let flag = false;
-                let foundCount = 0;
+                let compareFile = TokensOfFiles[j];
 
-                let seqI = TokensOfFiles[0].tokens.slice(i, iterator);
+                for (let k = 0; k < currentFile.tokens.length || k < compareFile.tokens.length; k++) {
+                    let seqA = currentFile.tokens.slice(k, iterator);
 
-                // File Loop
-                for (let j = 1; j < totalFiles; j++) {
-                    let currentFile = TokensOfFiles[j];
+                    // Because Score will be zero Anyway
+                    if (seqA.join('').length == 0) break;
 
-                    // Current File Tokens
-                    for (let k = 0; k < currentFile.tokens.length; k++) {
-                        let seqK = currentFile.tokens.slice(k, iterator);
+                    seqAJoined = addSlashes(seqA);
+                    let seqB = compareFile.tokens.join("");
+                    let match = new RegExp(seqAJoined, 'g').exec(seqB);
+                    if (match) {
+                        iFlag = false
+                        // Check if exists in Result
+                        for (let m = 0; m < result.length; m++) {
 
-                        // Match found in this file
-                        if (seqI.join("") == seqK.join("")) {
+                            let item = result[m];
 
-                            // because score will be zero anyway. So Ignoring
-                            if (seqI.length < 2) break;
-
-                            // Just the second file, so we are sure the result 
-                            // doesn't have this sequence already
-                            if (j == 1) {
-                                result.push({ sequence: seqI, seqLength: seqI.length, count: 2 });
-                            } else {
-                                // Check if this sequence was inserted before
-                                for (let m = 0; m < result.length; m++) {
-
-                                    if (result[m].sequence.join("") == seqK.join("")) {
-                                        result[m].count += 1;
-                                        break;
-                                    }
-
-                                    // // Never Inserted before. So Let's add. 
-                                    // // Note: Count will again be 2.
-                                    // if (innerFlag) {
-                                    //     result.push({ sequence: seqI, seqLength: seqI.length, count: 2 });
-                                    //     break;
-                                    // }
-
-                                }
+                            if (item.seq.join("") == match[0]) {
+                                item.count++;
+                                iFlag = true;
+                                break;
                             }
 
                         }
+                        if (!iFlag) result.push({ seq: seqA, count: 1, seqLength: seqA.length })
                     }
-                    // End of current file
 
                 }
-
-                if (flag) {
-                    // Exists across all files
-                }
-
             }
 
         }
@@ -132,18 +112,24 @@ function longestCommonSequences(tokenList) {
 
     }
 
-    // Sort the results. We only need the longest Sequence, 
+    // We only need the longest Sequence, 
     // but the result contains all the sequences, 
     // which can be further used in other applications.
+    let maxLength = result[0].seqLength;
 
-    result.sort((itemA, itemB) => {
-        return itemA.count < itemB.count;
+    result.forEach((item) => {
+        if (item.seqLength > maxLength) maxLength = item.seqLength;
     });
+
+    // Now filter the results where the sequence length is, indeed, maximum
+    result = result.filter((item) => {
+        return item.seqLength === maxLength;
+    })
 
     return result;
 }
 
-const r = longestCommonSequences(TokensOfFiles)
+const r = longestCommonSequences(TokensOfFiles);
 console.log(r)
 
 // For Logging, because console.log is too long to type
@@ -151,4 +137,14 @@ function cl(...messages) {
     messages.forEach((message) => {
         console.log(message + "\n");
     })
+}
+
+function addSlashes(string) {
+    // To escape characters required by RegExp
+    return string.slice(0).join("")
+        .replace(/\+/, /\+/)
+        .replace(/\-/, /\-/)
+        .replace(/\*/, /\\*/)
+        .replace(/\(/, /\(/)
+        .replace(/\)/, /\)/)
 }
