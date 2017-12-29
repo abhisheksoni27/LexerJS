@@ -20,12 +20,13 @@ const rules = [
     { pattern: /^\d+/, name: "Digits" },
     { pattern: /^[a-zA-Z_]\w*/, name: "Identifiers" },
     { pattern: /^[']/, name: "SingleQuotes" },
+    { pattern: /^["]/, name: "DoubleQuotes" },
+    { pattern: /^<|>|<<|>>|\+=|\-=|\*=/, name: "Other Operators" },
 ]
 
 function Lexer(sourceCode) {
 
     let pos = 0;
-    // skip_ws = new RegExp('\\S', 'g')
 
     // For Simplicity. Will expand this alter. TODO
     const buffer = sourceCode;
@@ -41,23 +42,18 @@ function Lexer(sourceCode) {
 
             if (match) {
                 if (rule.name == "WhiteSpace") {
-                    console.log(' ')
                     pos += match[0].length;
                     continue;
                 }
                 // Increment Postion
                 pos += match[0].length;
                 tokens.push(match[0]);
-                console.log(match[0])
-                // console.log(buffer.length, pos, buffer.substr(pos))
             }
         }
     }
     return tokens;
 
 }
-
-console.log(Lexer("for(const i.length = \t \n '0');"));
 
 module.exports = {
     Lexer
