@@ -1,3 +1,1 @@
-for (let k = 0; k < 1; k++) {
-    log;
-}
+const c = 11 + 33;

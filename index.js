@@ -80,12 +80,13 @@ function longestCommonSequences(tokenList) {
 
                 for (let k = 0; k < currentFile.tokens.length || k < compareFile.tokens.length; k++) {
                     let seqA = currentFile.tokens.slice(k, iterator);
-                    
+
                     // Because Score will be zero Anyway
                     if (seqA.length < 2) break;
+
                     seqAJoined = addSlashes(seqA);
-                    let seqB = compareFile.tokens.join("");
-                    let match = new RegExp(seqAJoined, 'g').exec(seqB);
+                    let seqBJoined = compareFile.tokens.join("");
+                    let match = new RegExp(seqAJoined, 'g').exec(seqBJoined);
                     if (match) {
                         iFlag = false
                         // Check if exists in Result
@@ -125,7 +126,7 @@ function longestCommonSequences(tokenList) {
         result = result.filter((item) => {
             // return true;
             return item.total === maxLength;
-        })
+        });
 
         // Calculate the Score as given in the Question:
         // score = log2(count) * log2(tokens)
