@@ -1,5 +1,3 @@
-let awesome = require('awesome');
+const awesome = require('awesome');
 
-for (let i = 0; i < 100; i++) {
-    console.log(awesome.name + i);
-}
+let aweme = require('beh');

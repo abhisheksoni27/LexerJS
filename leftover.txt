@@ -1,0 +1,11 @@
+// If It is a dot
+// if (rules[i].name == "Dot") {
+//     pos += match[0].length - 1;
+//     tokens.push(match[0].substr(pos, match[0].length - 1));
+//     continue;
+// }
+// if (rule.name == "WhiteSpace") {
+    // console.log(' ')
+    // pos += match[0].length;
+    // continue;
+// }

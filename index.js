@@ -45,7 +45,8 @@ TokensOfFiles.forEach((file) => {
     file.tokens = Lexer.Lexer(fileString);
 });
 
-console.log(TokensOfFiles[1].tokens)
+fs.writeFileSync('results.json', JSON.stringify(TokensOfFiles));
+// console.log(TokensOfFiles[1].tokens)
 
 // For Logging, because console.log is too long to type
 function cl(...messages) {
