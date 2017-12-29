@@ -1,0 +1,24 @@
+{
+  "name": "lexer-node",
+  "version": "0.0.1",
+  "description": "A simple Lexer built with JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhisheksoni27/LexerUofAlberta.git"
+  },
+  "keywords": [
+    "Lexer",
+    "Lexical",
+    "Analysis"
+  ],
+  "author": "Abhishek Soni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abhisheksoni27/LexerUofAlberta/issues"
+  },
+  "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme"
+}
