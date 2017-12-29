@@ -62,7 +62,7 @@ function Lexer(sourceCode) {
 }
 
 
-console.log(Lexer("for(let i = 0; i<1; i++){}"));
+// console.log(Lexer("for(let i = 0; i<1; i++){}"));
 
 module.exports = {
     Lexer

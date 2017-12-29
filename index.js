@@ -58,59 +58,93 @@ TokensOfFiles.forEach((file) => {
     tokenLengthForFiles.push(file.tokens.length);
 });
 
-const totalFiles = TokensOfFiles.length;
-const minTokenLength = Math.min(...tokenLengthForFiles);
+function longestCommonSequences(tokenList) {
 
-let iterator = minTokenLength;
+    const totalFiles = TokensOfFiles.length;
+    const minTokenLength = Math.min(...tokenLengthForFiles);
 
-const result = [];
+    let iterator = minTokenLength;
+    const result = [];
+    const commonSequences = [];
 
-while (iterator > 0) {
+    while (iterator > 0) {
 
-    for (let i = 0; i < TokensOfFiles[0].tokens.length; i++) {
-        
-        let flag = false;
-        let foundCount = 0;
-        
-        if (i + iterator <= TokensOfFiles[0].tokens.length) {
-            
-            let seqI = TokensOfFiles[0].tokens.slice(i, iterator);
-            
-            // File Loop
-            for (let j = 1; j < totalFiles; j++) {
-                let currentFile = TokensOfFiles[j];
-                
-                // Current File Tokens
-                for (let k = 0; k < currentFile.tokens.length; k++) {
-                    let seqK = currentFile.tokens.slice(k, minTokenLength);
-                    
-                    // Match Found
-                    if (seqI.join("") == seqK.join("")) {
-                        cl("here")
-                        flag = true;
-                        foundCount++;
-                    } else {
-                        flag = false;
+        for (let i = 0; i < TokensOfFiles[0].tokens.length; i++) {
+
+            if (i + iterator <= TokensOfFiles[0].tokens.length) {
+
+                let flag = false;
+                let foundCount = 0;
+
+                let seqI = TokensOfFiles[0].tokens.slice(i, iterator);
+
+                // File Loop
+                for (let j = 1; j < totalFiles; j++) {
+                    let currentFile = TokensOfFiles[j];
+
+                    // Current File Tokens
+                    for (let k = 0; k < currentFile.tokens.length; k++) {
+                        let seqK = currentFile.tokens.slice(k, iterator);
+
+                        // Match found in this file
+                        if (seqI.join("") == seqK.join("")) {
+
+                            // because score will be zero anyway. So Ignoring
+                            if (seqI.length < 2) break;
+
+                            // Just the second file, so we are sure the result 
+                            // doesn't have this sequence already
+                            if (j == 1) {
+                                result.push({ sequence: seqI, seqLength: seqI.length, count: 2 });
+                            } else {
+                                // Check if this sequence was inserted before
+                                for (let m = 0; m < result.length; m++) {
+
+                                    if (result[m].sequence.join("") == seqK.join("")) {
+                                        result[m].count += 1;
+                                        break;
+                                    }
+
+                                    // // Never Inserted before. So Let's add. 
+                                    // // Note: Count will again be 2.
+                                    // if (innerFlag) {
+                                    //     result.push({ sequence: seqI, seqLength: seqI.length, count: 2 });
+                                    //     break;
+                                    // }
+
+                                }
+                            }
+
+                        }
                     }
+                    // End of current file
+
                 }
-                // End of current file
 
-            }
+                if (flag) {
+                    // Exists across all files
+                }
 
-            if(flag){
-                // Exists across all files
-                result.push({seq: seqI, count:foundCount})
             }
 
         }
+        iterator--;
 
     }
-    iterator--;
 
+    // Sort the results. We only need the longest Sequence, 
+    // but the result contains all the sequences, 
+    // which can be further used in other applications.
+
+    result.sort((itemA, itemB) => {
+        return itemA.count < itemB.count;
+    });
+
+    return result;
 }
 
-console.log(result);
-
+const r = longestCommonSequences(TokensOfFiles)
+console.log(r)
 
 // For Logging, because console.log is too long to type
 function cl(...messages) {
