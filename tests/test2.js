@@ -1,2 +1,3 @@
-for(let j = 0; j<1; j++){
+for (let k = 0; k < 1; k++) {
+    log;
 }

@@ -1,2 +1,2 @@
-for(let i = 0; i<1; i++){
+for (let k = 0; k < 1; k++) {
 }

@@ -61,9 +61,9 @@ TokensOfFiles.forEach((file) => {
 function longestCommonSequences(tokenList) {
 
     const totalFiles = TokensOfFiles.length;
-    const minTokenLength = Math.min(...tokenLengthForFiles);
+    const maxTokenLength = Math.max(...tokenLengthForFiles);
 
-    let iterator = minTokenLength;
+    let iterator = maxTokenLength;
     let result = [];
     const commonSequences = [];
 
@@ -80,10 +80,9 @@ function longestCommonSequences(tokenList) {
 
                 for (let k = 0; k < currentFile.tokens.length || k < compareFile.tokens.length; k++) {
                     let seqA = currentFile.tokens.slice(k, iterator);
-
+                    
                     // Because Score will be zero Anyway
-                    if (seqA.join('').length == 0) break;
-
+                    if (seqA.length < 2) break;
                     seqAJoined = addSlashes(seqA);
                     let seqB = compareFile.tokens.join("");
                     let match = new RegExp(seqAJoined, 'g').exec(seqB);
@@ -94,14 +93,14 @@ function longestCommonSequences(tokenList) {
 
                             let item = result[m];
 
-                            if (item.seq.join("") == match[0]) {
+                            if (item.seq.join("") === match[0]) {
                                 item.count++;
                                 iFlag = true;
                                 break;
                             }
 
                         }
-                        if (!iFlag) result.push({ seq: seqA, count: 1, seqLength: seqA.length })
+                        if (!iFlag) result.push({ seq: seqA, count: 2, total: seqA.length })
                     }
 
                 }
@@ -115,24 +114,31 @@ function longestCommonSequences(tokenList) {
     // We only need the longest Sequence, 
     // but the result contains all the sequences, 
     // which can be further used in other applications.
-    let maxLength = result[0].seqLength;
 
-    result.forEach((item) => {
-        if (item.seqLength > maxLength) maxLength = item.seqLength;
-    });
+    try {
+        let maxLength = result[0].total;
 
-    // Filter the results where the sequence length is, indeed, maximum
-    result = result.filter((item) => {
-        return item.seqLength === maxLength;
-    })
+        result.forEach((item) => {
+            if (item.total > maxLength) maxLength = item.total;
+        });
+        // Filter the results where the sequence length is, indeed, maximum
+        result = result.filter((item) => {
+            // return true;
+            return item.total === maxLength;
+        })
 
-    // Calculate the Score as given in the Question:
-    // score = log2(count) * log2(tokens)
-    result.forEach((item) => {
-        item.score = (Math.log2(item.count) * Math.log2(item.seqLength)).toFixed(2); // for two decimal places 
-    });
+        // Calculate the Score as given in the Question:
+        // score = log2(count) * log2(tokens)
+        result.forEach((item) => {
+            item.score = (Math.log2(item.count) * Math.log2(item.total)).toFixed(2); // for two decimal places 
+        });
 
-    return result;
+        return result;
+
+    } catch (error) {
+        console.log(error);
+        return;
+    }
 }
 
 const result = longestCommonSequences(TokensOfFiles);
@@ -155,10 +161,16 @@ function cl(...messages) {
 function addSlashes(string) {
     // To escape characters required by RegExp
     return string.slice(0).join("")
-        .replace(/\+/, /\\+/)
-        .replace(/\+\+/, /\\+\\+/)
-        .replace(/\-/, /\\-/)
-        .replace(/\*/, /\\*/)
+        .replace(/\+/, "\\+")
+        .replace(/\+\+/, "\+\\+")
+        .replace(/\-\-/, "\-\\-")
+        .replace(/\*=/, "\*\\=")
+        .replace(/\+=/, "\+\\=")
+        .replace(/\-=/, "\-\\=")
+        .replace(/\-/, "\\-")
+        .replace(/\*/, "\\*")
         .replace(/\(/, "\\(")
         .replace(/\)/, "\\)")
+        .replace(/\"/, "\\\"")
+        .replace(/\'/, "\\\'")
 }
