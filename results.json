@@ -1,13 +1,23 @@
 [
     {
         "seq": [
+            ")",
+            "{",
+            "}"
+        ],
+        "count": 3,
+        "seqLength": 3,
+        "score": "2.51"
+    },
+    {
+        "seq": [
             "<",
             "1",
             ";"
         ],
         "count": 3,
         "seqLength": 3,
-        "score": 0
+        "score": "2.51"
     },
     {
         "seq": [
@@ -17,6 +27,16 @@
         ],
         "count": 3,
         "seqLength": 3,
-        "score": 0
+        "score": "2.51"
+    },
+    {
+        "seq": [
+            "for",
+            "(",
+            "let"
+        ],
+        "count": 3,
+        "seqLength": 3,
+        "score": "2.51"
     }
 ]

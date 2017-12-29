@@ -129,7 +129,7 @@ function longestCommonSequences(tokenList) {
     // Calculate the Score as given in the Question:
     // score = log2(count) * log2(tokens)
     result.forEach((item) => {
-        item.score = 0; 
+        item.score = (Math.log2(item.count) * Math.log2(item.seqLength)).toFixed(2); // for two decimal places 
     });
 
     return result;
@@ -137,6 +137,7 @@ function longestCommonSequences(tokenList) {
 
 const result = longestCommonSequences(TokensOfFiles);
 
+console.log(result)
 fs.writeFileSync('results.json', JSON.stringify(result))
 
 
@@ -154,9 +155,10 @@ function cl(...messages) {
 function addSlashes(string) {
     // To escape characters required by RegExp
     return string.slice(0).join("")
-        .replace(/\+/, /\+/)
-        .replace(/\-/, /\-/)
+        .replace(/\+/, /\\+/)
+        .replace(/\+\+/, /\\+\\+/)
+        .replace(/\-/, /\\-/)
         .replace(/\*/, /\\*/)
-        .replace(/\(/, /\(/)
-        .replace(/\)/, /\)/)
+        .replace(/\(/, "\\(")
+        .replace(/\)/, "\\)")
 }
