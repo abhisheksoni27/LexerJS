@@ -39,7 +39,6 @@ function Lexer(sourceCode) {
     while (pos < buffer.length) {
 
         const match = rule.exec(buffer.substr(pos));
-        console.log(buffer.substr(pos))
 
         if (match) {
             // Increment Postion
