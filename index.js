@@ -16,6 +16,7 @@ if (args.length == 0) throw Error("Please provide CSV file, or a list of JS file
 
 // Pre-Processing
 if (args.length > 1) {
+
     // JS Files
     for (let i = 0; i < args.length; i++) {
 
@@ -26,6 +27,7 @@ if (args.length > 1) {
     }
 
 } else {
+
     // CSV file
     let fileString = fs.readFileSync(args[0]).toLocaleString(); // File Contents
     fileString = fileString.split("\n").slice(1)
@@ -38,9 +40,16 @@ if (args.length > 1) {
     });
 }
 
+TokensOfFiles.forEach((file) => {
+    let fileString = fs.readFileSync(file.name).toString();
+    file.tokens = Lexer.Lexer(fileString);
+});
+
+console.log(TokensOfFiles[1].tokens)
+
 // For Logging, because console.log is too long to type
-function cl(...messages){
-    messages.forEach((message)=>{
+function cl(...messages) {
+    messages.forEach((message) => {
         console.log(message + "\n");
     })
 }
