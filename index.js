@@ -45,7 +45,70 @@ TokensOfFiles.forEach((file) => {
     file.tokens = Lexer.Lexer(fileString);
 });
 
+// In case you are interested to see the tokens.
 fs.writeFileSync('results.json', JSON.stringify(TokensOfFiles));
+
+/**
+ *  ######## Shared Sequence Algorithm #######
+ */
+
+const tokenLengthForFiles = [];
+
+TokensOfFiles.forEach((file) => {
+    tokenLengthForFiles.push(file.tokens.length);
+});
+
+const totalFiles = TokensOfFiles.length;
+const minTokenLength = Math.min(...tokenLengthForFiles);
+
+let iterator = minTokenLength;
+
+const result = [];
+
+while (iterator > 0) {
+
+    for (let i = 0; i < TokensOfFiles[0].tokens.length; i++) {
+        
+        let flag = false;
+        let foundCount = 0;
+
+        if (i + iterator <= TokensOfFiles[0].tokens.length) {
+
+            let seqI = TokensOfFiles[0].tokens.slice(i, iterator);
+            // File Loop
+            for (let j = 1; j < totalFiles; j++) {
+                let currentFile = TokensOfFiles[j];
+                
+                // Current Fle Token
+                for (let k = 0; k < currentFile.tokens.length; k++) {
+                    let seqK = currentFile.tokens.slice(k, minTokenLength);
+
+                    // Match Found
+                    if (seqI.join("") == seqK.join("")) {
+                        flag = true;
+                        foundCount++;
+                    } else {
+                        flag = false;
+                    }
+                }
+                // End of current file
+
+            }
+
+            if(flag){
+                // Exists across all files
+                result.push({seq: seqI, count:foundCount})
+            }
+
+        }
+
+    }
+    iterator--;
+
+}
+
+console.log(result);
+
 
 // For Logging, because console.log is too long to type
 function cl(...messages) {

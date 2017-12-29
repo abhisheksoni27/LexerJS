@@ -1,5 +1,5 @@
 const bleh = require('bleh');
 
-for (let i = 0; i < 17; i++) {
+for (let k = 0; k < 17; k++) {
     console.log(awesome.time + i);
 }
