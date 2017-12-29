@@ -46,7 +46,7 @@ TokensOfFiles.forEach((file) => {
 });
 
 // In case you are interested to see the tokens.
-fs.writeFileSync('results.json', JSON.stringify(TokensOfFiles));
+// fs.writeFileSync('tokens.json', JSON.stringify(TokensOfFiles));
 
 /**
  *  ######## Shared Sequence Algorithm #######
@@ -121,16 +121,28 @@ function longestCommonSequences(tokenList) {
         if (item.seqLength > maxLength) maxLength = item.seqLength;
     });
 
-    // Now filter the results where the sequence length is, indeed, maximum
+    // Filter the results where the sequence length is, indeed, maximum
     result = result.filter((item) => {
         return item.seqLength === maxLength;
     })
 
+    // Calculate the Score as given in the Question:
+    // score = log2(count) * log2(tokens)
+    result.forEach((item) => {
+        item.score = 0; 
+    });
+
     return result;
 }
 
-const r = longestCommonSequences(TokensOfFiles);
-console.log(r)
+const result = longestCommonSequences(TokensOfFiles);
+
+fs.writeFileSync('results.json', JSON.stringify(result))
+
+
+/**
+ * Utility Functions
+ */
 
 // For Logging, because console.log is too long to type
 function cl(...messages) {
