@@ -25,7 +25,7 @@
 
 // Combined Pattern!
 
-const rule = /(\s+)|(^((\+\+)|(\-\-)))|(^\+|\-|\*|\/)|(^\?\[)|(^\])|(^\?)|(^\=)|(^\()|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)/;
+const rule = /(^\s+)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)/;
 
 function Lexer(sourceCode) {
 
@@ -39,6 +39,7 @@ function Lexer(sourceCode) {
     while (pos < buffer.length) {
 
         const match = rule.exec(buffer.substr(pos));
+        console.log(buffer.substr(pos))
 
         if (match) {
             // Increment Postion
@@ -60,6 +61,9 @@ function Lexer(sourceCode) {
     return tokens;
 
 }
+
+
+console.log(Lexer("for(let i = 0; i<1; i++){}"));
 
 module.exports = {
     Lexer

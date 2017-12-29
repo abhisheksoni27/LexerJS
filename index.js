@@ -71,20 +71,22 @@ while (iterator > 0) {
         
         let flag = false;
         let foundCount = 0;
-
+        
         if (i + iterator <= TokensOfFiles[0].tokens.length) {
-
+            
             let seqI = TokensOfFiles[0].tokens.slice(i, iterator);
+            
             // File Loop
             for (let j = 1; j < totalFiles; j++) {
                 let currentFile = TokensOfFiles[j];
                 
-                // Current Fle Token
+                // Current File Tokens
                 for (let k = 0; k < currentFile.tokens.length; k++) {
                     let seqK = currentFile.tokens.slice(k, minTokenLength);
-
+                    
                     // Match Found
                     if (seqI.join("") == seqK.join("")) {
+                        cl("here")
                         flag = true;
                         foundCount++;
                     } else {
