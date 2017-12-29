@@ -16,7 +16,7 @@ const rules = [
     { pattern: /^\+|\-|\*|\//, name: "Operators" },
     { pattern: /^\>/, name: "digits" },
     { pattern: /^\</, name: "digits" },
-    { pattern: /\.(?=\w+)/, name: "Dot" },
+    { pattern: /^\.(?=\w+)/, name: "Dot" },
     { pattern: /^\d+/, name: "Digits" },
     { pattern: /^[a-zA-Z_]\w*/, name: "Identifiers" },
     { pattern: /^[']/, name: "SingleQuotes" },
@@ -38,7 +38,13 @@ function Lexer(sourceCode) {
             let rule = rules[i];
             const match = rule.pattern.exec(buffer.substr(pos));
 
+
             if (match) {
+                if (rule.name == "WhiteSpace") {
+                    console.log(' ')
+                    pos += match[0].length;
+                    continue;
+                }
                 // Increment Postion
                 pos += match[0].length;
                 tokens.push(match[0]);
@@ -51,7 +57,7 @@ function Lexer(sourceCode) {
 
 }
 
-console.log(Lexer("for(const i.length = '0');"));
+console.log(Lexer("for(const i.length = \t \n '0');"));
 
 module.exports = {
     Lexer
