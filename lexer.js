@@ -79,7 +79,7 @@ exports.Lexer = class {
                         if (seqA.length < 2) break;
 
                         let seqB = fileB.tokens;
-                        let match = compareFiles(seqA, seqB);
+                        let match = compareSequences(seqA, seqB);
 
                         if (match) {
                             let iFlag = false;
@@ -123,7 +123,7 @@ exports.Lexer = class {
  * in JavaScript, as there is no first-hand support for access modifiers.
  */
 
-function compareFiles(seqA, seqB) {
+function compareSequences(seqA, seqB) {
 
     let seqAJoined = addSlashes(seqA);
     let seqBJoined = seqB.join("");
