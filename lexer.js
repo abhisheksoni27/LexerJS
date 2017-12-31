@@ -1,7 +1,8 @@
 const fs = require('fs');
+const path = require('path');
 
 class Lexer {
-    constructor(TokensOfFiles, rule) {
+    constructor(TokensOfFiles, options, rule) {
 
         if (!TokensOfFiles) throw new Error('No File List Provided');
 
@@ -13,6 +14,15 @@ class Lexer {
         this.maxTokenLength = 0;
         this.tokenLengthForFiles = [];
         this.result = [];
+        this.saveTokens = options.saveTokens;
+
+        if (this.saveTokens) {
+            try {
+                fs.mkdirSync(__dirname + path.sep + "tokens")
+            } catch (IOError) {
+                console.error(IOError)
+            }
+        }
     }
 
     tokenizer(sourceCode) {
@@ -52,6 +62,14 @@ class Lexer {
         this.TokensOfFiles.forEach((file) => {
             let fileString = fs.readFileSync(file.name).toString();
             file.tokens = this.tokenizer(fileString);
+            if (this.saveTokens) {
+                try {
+                    fs.writeFileSync(`tokens/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens));
+                } catch (e) {
+                    console.error(e);
+                    process.exit(0);
+                }
+            }
         });
 
         this.TokensOfFiles.forEach((file) => {

@@ -1,0 +1,7 @@
+{
+    "files": [
+        "./tests/test1.js",
+        "./tests/test2.js",
+        "./tests/test3.js"
+    ]
+}
