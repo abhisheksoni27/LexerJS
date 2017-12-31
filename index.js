@@ -36,7 +36,7 @@ if (cli.flags.h) cli.showHelp([code = 0]);
 // To show version number when -v, or --version is passed
 if (cli.flags.v) cli.showVersion();
 
-const TokensOfFiles = [];
+const fileList = [];
 
 // Pre-Processing
 if (cli.input.length == 0) {
@@ -73,9 +73,7 @@ if (cli.input.length > 1) {
     files.forEach((fileName) => {
         // To remove the delimiter
         cleanedName = csv ? fileName.substr(0, fileName.length - 1) : fileName;
-        TokensOfFiles.push({
-            name: cleanedName, tokens: []
-        })
+        fileList.push(cleanedName);
     });
 }
 
@@ -83,7 +81,7 @@ const options = {
     saveTokens: cli.flags.s,
 }
 
-const JSLexer = new Lexer(TokensOfFiles, options);
+const JSLexer = new Lexer(fileList, options);
 
 result = JSLexer.longestCommonSequences()
 

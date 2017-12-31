@@ -1,38 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const defaultRules = [
-    { pattern: /^\s/, name: "WhiteSpace" },
-    { pattern: /(^\/\*(.|\n)+\*\/)|(^\/\/.+)/gm, name: "Comments" },
-    { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
-    { pattern: /^\d+/, name: "Digits" },
-    { pattern: /^\[/, name: "OpenBracket" },
-    { pattern: /^\]/, name: "CloseBracket" },
-    { pattern: /^\(/, name: "OpenParen" },
-    { pattern: /^\)/, name: "CloseParen" },
-    { pattern: /^\{/, name: "OpenBraces" },
-    { pattern: /^\}/, name: "CloseBraces" },
-    { pattern: /^\;/, name: "SemiColon" },
-    { pattern: /^\=/, name: "Assign" },
-    { pattern: /^\?/, name: "QuestionMark" },
-    { pattern: /^\:/, name: "Colon" },
-    { pattern: /^((\+\+)|(\-\-))/, name: "PlusPlusMinusMinus" },
-    { pattern: /^\+|\-|\*|\//, name: "Operators" },
-    { pattern: /^\>/, name: "GreaterThan" },
-    { pattern: /^\</, name: "LessThan" },
-    { pattern: /^\.(?=\w+)/, name: "Dot" },
-    { pattern: /^[']/, name: "SingleQuotes" },
-    { pattern: /^["]/, name: "DoubleQuotes" },
-    { pattern: /^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=/, name: "Other Operators" },
-    { pattern: /^\=\>/, name: "FatArrow" },
-];
 
 class Lexer {
-    constructor(TokensOfFiles, options, rules) {
+    constructor(files, options, rules) {
 
         //TODO: Will need type of lexeme for parser, so bring back the Types
         this.rules = rules ? rules : defaultRules;
 
-        this.TokensOfFiles = TokensOfFiles;
+        this.TokensOfFiles = [];
+
+        this.files = files;
+
         this.totalFiles = 0;
         this.maxTokenLength = 0;
         this.tokenLengthForFiles = [];
@@ -40,64 +18,78 @@ class Lexer {
         this.saveTokens = options ? options.saveTokens : false;
 
         if (this.saveTokens) {
+            const tokenDir = __dirname + path.sep + "tokens";
             try {
-                const tokenDir = __dirname + path.sep + "tokens";
                 if (!fs.statSync(tokenDir)) {
                     fs.mkdirSync(tokenDir);
                 }
             } catch (IOError) {
-                console.error(IOError)
+                fs.mkdirSync(tokenDir);
             }
         }
     }
 
-    tokenizer(sourceCode) {
+    tokenizer(sourceCode, fileName) {
         let pos = 0;
 
         // For Simplicity. Will expand this alter. TODO
         const buffer = sourceCode;
 
         let tokens = [];
-
+        let previousPos = pos;
         while (pos < buffer.length) {
+
             for (let i = 0; i < this.rules.length; i++) {
                 const rule = this.rules[i];
                 const match = rule.pattern.exec(buffer.substr(pos));
 
                 if (match) {
-                    if (rule.name === "Comments") {
-                        pos = match[0].length;
+                    //Ignore WhiteSpace and Comments
+                    if (rule.name === "Comments" || rule.name === "WhiteSpace") {
+                        pos += match[0].length;
+                        previousPos = pos;
                         break;
                     }
-                    
                     pos += match[0].length;
+                    previousPos = pos;
                     tokens.push(match[0]);
                     break;
                 }
+
+                if (i === (this.rules.length - 1) && previousPos === pos) {
+                    console.log(`
+Cannot find this lexeme in the language:
+
+FileName: ${fileName} at ${pos}
+
+buffer: ----> ${buffer.substr(pos, pos + 20)}
+
+`);
+                    process.exit(-1);
+                }
             }
+
         }
-
-        // To remove WhiteSpace
-
-        tokens = tokens.filter((token) => {
-            const match = new RegExp(/\s+/).exec(token);
-            if (match) {
-                return false;
-            }
-            return true;
-        });
 
         return tokens;
     }
 
-    longestCommonSequences(TokensOfFiles) {
+    longestCommonSequences(files) {
 
-        this.TokensOfFiles = TokensOfFiles ? TokensOfFiles : this.TokensOfFiles;
-        if (!this.TokensOfFiles) throw new Error('No File List Provided');
+        this.files = files ? files : this.files;
+        if (!this.files) throw new Error('No File List Provided');
+
+        this.files.forEach((file) => {
+            this.TokensOfFiles.push({
+                name: file, tokens: []
+            });
+        });
+
+        this.totalFiles = this.TokensOfFiles.length;
 
         this.TokensOfFiles.forEach((file) => {
             let fileString = fs.readFileSync(file.name).toString();
-            file.tokens = this.tokenizer(fileString);
+            file.tokens = this.tokenizer(fileString, file.name);
             if (this.saveTokens) {
                 try {
                     fs.writeFileSync(`tokens/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens));
@@ -125,7 +117,6 @@ class Lexer {
                     if (i == j) break;
 
                     let fileB = this.TokensOfFiles[j];
-
                     for (let k = 0; k < fileA.tokens.length || k < fileB.tokens.length; k++) {
                         let seqA = fileA.tokens.slice(k, iterator);
 
@@ -179,11 +170,11 @@ class Lexer {
 function compareSequences(seqA, seqB) {
 
     let seqAJoined = addSlashes(seqA);
-    let seqBJoined = seqB.join("");
-    let match = new RegExp(seqAJoined, 'g').exec(seqBJoined);
+    let seqBJoined = addSlashes(seqB);
 
+    let match = new RegExp(seqAJoined, 'gm').exec(seqBJoined);
     // return first match if exists
-    if (match) { /*console.log(match[0]);*/ return match[0]; }
+    if (match) return match[0];
 
     return;
 }
@@ -242,19 +233,45 @@ function cl(...messages) {
 
 function addSlashes(string) {
     // To escape characters required by RegExp
-    return string.slice(0).join("")
-        .replace(/\+/, "\\+")
-        .replace(/\+\+/, "\+\\+")
-        .replace(/\-\-/, "\-\\-")
-        .replace(/\*=/, "\*\\=")
-        .replace(/\+=/, "\+\\=")
-        .replace(/\-=/, "\-\\=")
-        .replace(/\-/, "\\-")
-        .replace(/\*/, "\\*")
-        .replace(/\(/, "\\(")
-        .replace(/\)/, "\\)")
-        .replace(/\"/, "\\\"")
-        .replace(/\'/, "\\\'")
+    return string.slice(0).join("").replace(/[.*+?^${}`~()|[\]\\]/g, "\\$&");
 }
+
+function str(obj) {
+    return JSON.stringify(obj);
+}
+
+const defaultRules = [
+    { pattern: /^\s/, name: "WhiteSpace" },
+    { pattern: /(^\/\*(.|\n)+\*\/)|(^\/\/.+)/, name: "Comments" },
+    { pattern: /^\'(.+)?\'/, name: "SingleQuotes" },
+    { pattern: /^\"(.+)?\"/, name: "DoubleQuotes" },
+    { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
+    { pattern: /^[=]/, name: "Assign" },
+    { pattern: /^\d+/, name: "Digits" },
+    { pattern: /^[\/\\]/, name: "Slashes" },
+    { pattern: /^\=\>/, name: "FatArrow" },
+    { pattern: /^[[]/, name: "OpenBracket" },
+    { pattern: /^[\]]/, name: "CloseBracket" },
+    { pattern: /^[(]/, name: "OpenParen" },
+    { pattern: /^[)]/, name: "CloseParen" },
+    { pattern: /^[{]/, name: "OpenBraces" },
+    { pattern: /^[}]/, name: "CloseBraces" },
+    { pattern: /^[;]/, name: "SemiColon" },
+    { pattern: /^[!]/, name: "ExclamationMark" },
+    { pattern: /^[^]/, name: "C" },
+    { pattern: /^\<\<|\>\>|[<>]|\+=|\-=|\*=/, name: "Other Operators" },
+    { pattern: /^\$/, name: "Dollar" },
+    { pattern: /^[,]/, name: "Comma" },
+    { pattern: /^[`]/, name: "TempalateLiteral" },
+    { pattern: /^[#]/, name: "OtherCharacters" },
+    { pattern: /^[?]/, name: "QuestionMark" },
+    { pattern: /^[:]/, name: "Colon" },
+    { pattern: /^\+\+|--/, name: "PlusPlusMinusMinus" },
+    { pattern: /^[+\-*\/]/, name: "Operators" },
+    { pattern: /^[>]/, name: "GreaterThan" },
+    { pattern: /^[<]/, name: "LessThan" },
+    { pattern: /^\.(?=\w+)/, name: "Dot" },
+    { pattern: /^[..]/, name: "DoubleDot" },
+];
 
 module.exports = Lexer;

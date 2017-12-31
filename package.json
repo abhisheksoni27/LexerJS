@@ -1,5 +1,5 @@
 {
-  "name": "lexer-node",
+  "name": "lexerJS",
   "version": "0.0.1",
   "description": "A simple Lexer built with JavaScript",
   "main": "index.js",
