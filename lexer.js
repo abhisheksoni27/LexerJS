@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-exports.Lexer = class {
+class Lexer {
     constructor(TokensOfFiles, rule) {
 
         if (!TokensOfFiles) throw new Error('No File List Provided');
@@ -203,3 +203,5 @@ function addSlashes(string) {
         .replace(/\"/, "\\\"")
         .replace(/\'/, "\\\'")
 }
+
+module.exports = Lexer;

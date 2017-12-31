@@ -1,4 +1,4 @@
-const Lexer = require('./lexer.js').Lexer;
+const Lexer = require('./lexer.js');
 const fs = require('fs') // For reading files
 
 // To parse command line arguments
