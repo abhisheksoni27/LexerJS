@@ -15,10 +15,14 @@
     "Lexical",
     "Analysis"
   ],
+  "bin": "index.js",
   "author": "Abhishek Soni",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/abhisheksoni27/LexerUofAlberta/issues"
   },
-  "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme"
+  "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme",
+  "dependencies": {
+    "meow": "^4.0.0"
+  }
 }

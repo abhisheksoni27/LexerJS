@@ -1,14 +1,31 @@
+#!/usr/bin/env node
 const Lexer = require('./lexer.js');
 const fs = require('fs') // For reading files
+const meow = require('meow');
 
-// To parse command line arguments
-// 0: Shell command
-// 1: file-name
-// 2: Actual arguments
-const args = process.argv.slice(2);
-
-// This program only works if you provide one CSV file, 
-// or many .js files. No other condition is checked.
+const cli = meow(`
+    Usage
+      $ lexerJS <Input: CSV or JSON file>
+ 
+    Options
+      --saveTokens, -s  Include a rainbow
+      --output, -o  JSON or CSV output
+ 
+    Examples
+      $ foo input.csv --tokens
+      🌈 unicorns 🌈
+`, {
+        flags: {
+            saveTokens: {
+                type: 'boolean',
+                alias: 's'
+            },
+            output:{
+                type:'string',
+                alias: 'o'
+            }
+        }
+    });
 
 const TokensOfFiles = [];
 
