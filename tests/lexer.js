@@ -11,11 +11,24 @@ describe('LexerJS - Tokenizer Check', () => {
         expect(LexerJS.tokenizer("for int i = 0; \n i--;").length).equal(9);
     });
 
-    it('should ignore comments', () => {
+    it('should ignore single-line comments', () => {
         const tokens = LexerJS.tokenizer("//AWSOME\n\n for int i = 0; \n i--;");
-        
-        console.log(tokens);
+        expect(tokens.length).equal(9);
+    });
 
-        expect(tokens.length).equal(11);
+    it('should ignore multi-line comments', () => {
+        const tokens = LexerJS.tokenizer(`/**
+         * AWESOME
+         * This is ignored
+        */
+
+        const a = 1;
+        const b = 2;
+
+        for(int i = 0;)
+        `);
+
+        // console.log(tokens);
+        expect(tokens.length).equal(18);
     });
 })

@@ -1,13 +1,36 @@
 const fs = require('fs');
 const path = require('path');
+const defaultRules = [
+    { pattern: /^\s/, name: "WhiteSpace" },
+    { pattern: /(^\/\*(.|\n)+\*\/)|(^\/\/.+)/gm, name: "Comments" },
+    { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
+    { pattern: /^\d+/, name: "Digits" },
+    { pattern: /^\[/, name: "OpenBracket" },
+    { pattern: /^\]/, name: "CloseBracket" },
+    { pattern: /^\(/, name: "OpenParen" },
+    { pattern: /^\)/, name: "CloseParen" },
+    { pattern: /^\{/, name: "OpenBraces" },
+    { pattern: /^\}/, name: "CloseBraces" },
+    { pattern: /^\;/, name: "SemiColon" },
+    { pattern: /^\=/, name: "Assign" },
+    { pattern: /^\?/, name: "QuestionMark" },
+    { pattern: /^\:/, name: "Colon" },
+    { pattern: /^((\+\+)|(\-\-))/, name: "PlusPlusMinusMinus" },
+    { pattern: /^\+|\-|\*|\//, name: "Operators" },
+    { pattern: /^\>/, name: "GreaterThan" },
+    { pattern: /^\</, name: "LessThan" },
+    { pattern: /^\.(?=\w+)/, name: "Dot" },
+    { pattern: /^[']/, name: "SingleQuotes" },
+    { pattern: /^["]/, name: "DoubleQuotes" },
+    { pattern: /^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=/, name: "Other Operators" },
+    { pattern: /^\=\>/, name: "FatArrow" },
+];
 
 class Lexer {
-    constructor(TokensOfFiles, options, rule) {
-
+    constructor(TokensOfFiles, options, rules) {
 
         //TODO: Will need type of lexeme for parser, so bring back the Types
-        this.rule = rule ? rule : /(^\s+)|(^\/\/.*)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)|(^\/\*(.|\n)+\*\/)/;
-        ;
+        this.rules = rules ? rules : defaultRules;
 
         this.TokensOfFiles = TokensOfFiles;
         this.totalFiles = 0;
@@ -37,13 +60,20 @@ class Lexer {
         let tokens = [];
 
         while (pos < buffer.length) {
+            for (let i = 0; i < this.rules.length; i++) {
+                const rule = this.rules[i];
+                const match = rule.pattern.exec(buffer.substr(pos));
 
-            const match = this.rule.exec(buffer.substr(pos));
-
-            if (match) {
-
-                pos += match[0].length;
-                tokens.push(match[0]);
+                if (match) {
+                    if (rule.name === "Comments") {
+                        pos = match[0].length;
+                        break;
+                    }
+                    
+                    pos += match[0].length;
+                    tokens.push(match[0]);
+                    break;
+                }
             }
         }
 
@@ -63,9 +93,8 @@ class Lexer {
     longestCommonSequences(TokensOfFiles) {
 
         this.TokensOfFiles = TokensOfFiles ? TokensOfFiles : this.TokensOfFiles;
+        if (!this.TokensOfFiles) throw new Error('No File List Provided');
 
-        if (!TokensOfFiles) throw new Error('No File List Provided');
-        this.tokenLengthForFiles = this.TokensOfFiles.length
         this.TokensOfFiles.forEach((file) => {
             let fileString = fs.readFileSync(file.name).toString();
             file.tokens = this.tokenizer(fileString);
@@ -135,7 +164,6 @@ class Lexer {
         // We only need the longest Sequence, 
         // but the result contains all the sequences, 
         // which can be further used in other applications.
-
         this.result = getMaxLengthSequence(this.result);
 
         return this.result;
