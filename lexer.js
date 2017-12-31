@@ -4,18 +4,17 @@ const path = require('path');
 class Lexer {
     constructor(TokensOfFiles, options, rule) {
 
-        if (!TokensOfFiles) throw new Error('No File List Provided');
 
         //TODO: Will need type of lexeme for parser, so bring back the Types
         this.rule = rule ? rule : /(^\s+)|(^\/\/.*)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)|(^\/\*(.|\n)+\*\/)/;
         ;
 
         this.TokensOfFiles = TokensOfFiles;
-        this.totalFiles = this.TokensOfFiles.length;
+        this.totalFiles = 0;
         this.maxTokenLength = 0;
         this.tokenLengthForFiles = [];
         this.result = [];
-        this.saveTokens = options.saveTokens;
+        this.saveTokens = options ? options.saveTokens : false;
 
         if (this.saveTokens) {
             try {
@@ -42,7 +41,7 @@ class Lexer {
             const match = this.rule.exec(buffer.substr(pos));
 
             if (match) {
-                // Increment Postion
+
                 pos += match[0].length;
                 tokens.push(match[0]);
             }
@@ -61,8 +60,12 @@ class Lexer {
         return tokens;
     }
 
-    longestCommonSequences() {
+    longestCommonSequences(TokensOfFiles) {
 
+        this.TokensOfFiles = TokensOfFiles ? TokensOfFiles : this.TokensOfFiles;
+
+        if (!TokensOfFiles) throw new Error('No File List Provided');
+        this.tokenLengthForFiles = this.TokensOfFiles.length
         this.TokensOfFiles.forEach((file) => {
             let fileString = fs.readFileSync(file.name).toString();
             file.tokens = this.tokenizer(fileString);
