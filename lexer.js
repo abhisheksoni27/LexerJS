@@ -6,7 +6,8 @@ class Lexer {
 
         if (!TokensOfFiles) throw new Error('No File List Provided');
 
-        this.rule = rule ? rule : /(^\s+)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)/;
+        //TODO: Will need type of lexeme for parser, so bring back the Types
+        this.rule = rule ? rule : /(^\s+)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)|(^\/\/.*)/;
         ;
 
         this.TokensOfFiles = TokensOfFiles;
@@ -79,7 +80,7 @@ class Lexer {
         this.maxTokenLength = Math.max(...this.tokenLengthForFiles);
 
         let iterator = this.maxTokenLength;
-
+        //TODO: Try to separate some of the logic into private methods
         while (iterator > 0) {
             for (let i = 0; i < this.totalFiles; i++) {
                 let fileA = this.TokensOfFiles[i];
