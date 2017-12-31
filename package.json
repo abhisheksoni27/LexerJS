@@ -24,5 +24,9 @@
   "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme",
   "dependencies": {
     "meow": "^4.0.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^4.1.0"
   }
 }

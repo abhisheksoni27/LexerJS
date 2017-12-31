@@ -67,7 +67,6 @@ if (cli.input.length > 1) {
     const csv = ext === "csv" ? true : false;
     let files;
 
-
     // CSV file
     files = csv ? fileString.split("\n").slice(1) : JSON.parse(fileString).files;
 

@@ -7,7 +7,7 @@ class Lexer {
         if (!TokensOfFiles) throw new Error('No File List Provided');
 
         //TODO: Will need type of lexeme for parser, so bring back the Types
-        this.rule = rule ? rule : /(^\s+)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)|(^\/\/.*)/;
+        this.rule = rule ? rule : /(^\s+)|(^\/\/.*)|(^((\+\+)|(^\-\-)))|(^\+|\-|\*|\/)|(^\[)|(^\])|(^\?)|(^\=)|(^\()|(^\))|(^\\)|(^\})|(^\{)|(^\;)|(^\:)|(^\<)|(^[a-zA-Z_]\w*)|(^\d+)|(^\.(?=\w+))|(^["])|(^['])|(^\<|\>|\<\<|\>\>|\+\=|\-\=|\*\=)|(^\=\>)|(^\/\*(.|\n)+\*\/)/;
         ;
 
         this.TokensOfFiles = TokensOfFiles;
@@ -19,7 +19,10 @@ class Lexer {
 
         if (this.saveTokens) {
             try {
-                fs.mkdirSync(__dirname + path.sep + "tokens")
+                const tokenDir = __dirname + path.sep + "tokens";
+                if (!fs.statSync(tokenDir)) {
+                    fs.mkdirSync(tokenDir);
+                }
             } catch (IOError) {
                 console.error(IOError)
             }
