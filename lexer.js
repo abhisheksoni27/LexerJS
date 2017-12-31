@@ -64,35 +64,57 @@ exports.Lexer = class {
 
         while (iterator > 0) {
             for (let i = 0; i < this.totalFiles; i++) {
-                let currentFile = this.TokensOfFiles[i];
+                let fileA = this.TokensOfFiles[i];
                 for (let j = 0; j < this.totalFiles; j++) {
-                    
+
                     //Same File
                     if (i == j) break;
-                    
-                    let compareFile = this.TokensOfFiles[j];
-                    
-                    for (let k = 0; k < currentFile.tokens.length || k < compareFile.tokens.length; k++) {
-                        let seqA = currentFile.tokens.slice(k, iterator);
+
+                    let fileB = this.TokensOfFiles[j];
+
+                    for (let k = 0; k < fileA.tokens.length || k < fileB.tokens.length; k++) {
+                        let seqA = fileA.tokens.slice(k, iterator);
+
+                        // Because score will be zero, anyway
                         if (seqA.length < 2) break;
-                        let seqB = compareFile.tokens;
-                        this.result = compareFiles(seqA, seqB, iterator);
+
+                        let seqB = fileB.tokens;
+                        let match = compareFiles(seqA, seqB);
+
+                        if (match) {
+                            let iFlag = false;
+                            // Check if exists in Result
+                            for (let m = 0; m < this.result.length; m++) {
+
+                                let item = this.result[m];
+                                if (item.seq.join("") === match) {
+                                    item.count++;
+                                    iFlag = true;
+                                    break;
+                                }
+
+                            }
+
+                            if (!iFlag) {
+                                this.result.push({ seq: seqA, count: 1, total: seqA.length });
+                            }
+                        }
                     }
                 }
-                
+
             }
             iterator--;
-            
+
         }
-        
+
         // We only need the longest Sequence, 
         // but the result contains all the sequences, 
         // which can be further used in other applications.
-        
+
         this.result = getMaxLengthSequence(this.result);
-        
+
         return this.result;
-        
+
     }
 }
 
@@ -101,19 +123,16 @@ exports.Lexer = class {
  * in JavaScript, as there is no first-hand support for access modifiers.
  */
 
+function compareFiles(seqA, seqB) {
 
-/**
- * 
- */
-
-function compareFiles(seqA, seqB, iterator) {
-    
     let seqAJoined = addSlashes(seqA);
     let seqBJoined = seqB.join("");
     let match = new RegExp(seqAJoined, 'g').exec(seqBJoined);
-    
-    // return first match
-    return match[0];
+
+    // return first match if exists
+    if (match) { /*console.log(match[0]);*/ return match[0]; }
+
+    return;
 }
 
 /**
