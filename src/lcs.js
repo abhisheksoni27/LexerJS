@@ -4,7 +4,7 @@
  */
 
 function lcs(seqA, seqB) {
-    let seq = [];
+    let longestCommonSequences = [];
 
     const lcsTable = new Array(seqA.length);
     const m = seqA.length, n = seqB.length;
@@ -43,12 +43,12 @@ function lcs(seqA, seqB) {
                 } else {
                     str = seqA.slice(i - maxLength + 1, i + 1)
                 }
-                seq.push(str);
+                longestCommonSequences.push(str);
             }
         }
     }
 
-    return seq;
+    return longestCommonSequences;
 }
 
 module.exports = lcs;

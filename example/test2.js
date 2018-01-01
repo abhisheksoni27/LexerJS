@@ -1,3 +1,3 @@
 const c = 11 + 33;
-butt;
+why;
 bye(1);
