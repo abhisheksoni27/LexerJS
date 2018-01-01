@@ -1,10 +1,11 @@
-const lcsbase = require('./lcs');
+const lcsbase = require('./lcsbase');
 const utility = require('./utility');
 
 function longestCommonSequences(TokensOfFiles) {
 
     const totalFiles = TokensOfFiles.length;
     const tokenLengthForFiles = [];
+
     TokensOfFiles.forEach((file) => {
         tokenLengthForFiles.push(file.tokens.length);
     });

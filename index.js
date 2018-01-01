@@ -61,7 +61,7 @@ if (saveTokens) {
 // Pre-Processing
 function preProcessFiles() {
     if (cli.input.length == 0) {
-        throw Error("Please provide CSV/JSON file, or a list of JS files.");
+        throw Error("Please provide a CSV/JSON file, or a list of JS files.");
         process.exit(0);
     }
 
@@ -131,7 +131,6 @@ function run() {
 }
 
 // Save Result
-
 function saveResult(resutlt) {
     const outputFileExt = cli.flags.o;
     
