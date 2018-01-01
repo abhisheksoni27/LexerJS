@@ -3,6 +3,7 @@ const LCSfinder = require('./src/longestCommonSequences');
 const fs = require('fs') // For reading files
 const path = require('path');
 
+const utility = require('./src/utility')
 const tokenizer = require('./src/tokenizer');
 const meow = require('meow');
 const usageString = `
@@ -101,6 +102,7 @@ if (cli.input.length > 1) {
     });
 }
 
+// Find tokens for each file
 TokensOfFiles.forEach((file) => {
     let fileString = fs.readFileSync(file.name).toString();
     file.tokens = tokenizer(fileString, file.name);
@@ -113,3 +115,16 @@ TokensOfFiles.forEach((file) => {
         }
     }
 });
+
+// Find Longest Common Sequence
+const result = LCSfinder(TokensOfFiles);
+
+// Save Result
+
+const outputFileExt = cli.flags.o;
+
+const saveStatus = outputFileExt === "csv"
+    ? utility.saveCSV(result, 'result')
+    : utility.saveJSON(result, 'result')
+
+if (saveStatus) console.log(`Results successfully saved at ${__dirname}/ + ${outputFileExt}.csv}`)

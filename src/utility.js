@@ -2,6 +2,8 @@
  * Utility Functions
  */
 
+ const fs = require('fs');
+
 // Check if item exists in collection
 function checkIfExists(collection, target) {
     let flag = false;
@@ -20,6 +22,7 @@ function assignScore(sequences) {
 }
 
 
+
 /**
  * Calculate score for each sub-sequence
  * score = log2(count) * log2(tokens)
@@ -36,6 +39,36 @@ function cl(...messages) {
     })
 }
 
+function saveJSON(data, name) {
+    fs.writeFileSync(`${__dirname}/${name}.json`, JSON.stringify(data))
+}
+
+function saveCSV(data, name) {
+
+    const fileStream = fs.createWriteStream(`${name}.csv`);
+
+    fileStream.once('open', function (fd) {
+
+        fileStream.write("score,tokens,count,“sourcecode”\n");
+        data.forEach((item) => {
+            let str = "";
+            let del = ",";
+            str += item.score + del;
+            str += item.seq.length + del;
+            str += item.count + del;
+            str += JSON.stringify(item.seq);
+
+            str += "\n";
+            fileStream.write(str);
+        });
+        fileStream.end();
+        return true;
+    });
+
+    return false;
+}
+
 module.exports = {
-    score, cl, assignScore, checkIfExists
+
+    score, cl, assignScore, checkIfExists, saveJSON, saveCSV
 }
