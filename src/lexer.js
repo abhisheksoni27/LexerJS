@@ -30,51 +30,6 @@ class Lexer {
         }
     }
 
-    tokenizer(sourceCode, fileName) {
-        let pos = 0;
-
-        // For Simplicity. Will expand this alter. TODO
-        const buffer = sourceCode;
-
-        let tokens = [];
-        let previousPos = pos;
-        while (pos < buffer.length) {
-
-            for (let i = 0; i < this.rules.length; i++) {
-                const rule = this.rules[i];
-                const match = rule.pattern.exec(buffer.substr(pos));
-
-                if (match) {
-                    //Ignore WhiteSpace and Comments
-                    if (rule.name === "Comments" || rule.name === "WhiteSpace") {
-                        pos += match[0].length;
-                        previousPos = pos;
-                        break;
-                    }
-                    pos += match[0].length;
-                    previousPos = pos;
-                    tokens.push(match[0]);
-                    break;
-                }
-
-                if (i === (this.rules.length - 1) && previousPos === pos) {
-                    console.log(`
-Cannot find this lexeme in the language:
-
-FileName: ${fileName} at ${pos}
-
-buffer: ----> ${buffer.substr(pos, pos + 20)}
-
-`);
-                    process.exit(-1);
-                }
-            }
-
-        }
-
-        return tokens;
-    }
-
     longestCommonSequences(files) {
 
         this._preProcess(files);
@@ -108,7 +63,7 @@ buffer: ----> ${buffer.substr(pos, pos + 20)}
         // We only need the longest Sequence, 
         // but the result contains all the sequences, 
         // which can be further used in other applications.
-        this.result = getMaxLengthSequence(this.result);
+        this.result = assignScore(this.result);
 
         return this.result;
 
@@ -161,36 +116,11 @@ function checkIfExists(source, target) {
     return { exists: false, loc: null };
 }
 
-/**
- * Takes an array of sequences, and returns the sequence 
- * with maximum length. 
- * 
- * Also adds score to each max-length sequence.
- */
-function getMaxLengthSequence(sequences) {
-    try {
-        let maxLength = sequences[0].total;
-
-        sequences.forEach((item) => {
-            if (item.total > maxLength) maxLength = item.total;
-        });
-        // Filter the results where the sequence length is, indeed, maximum
-        sequences = sequences.filter((item) => {
-            // return true;
-            return item.total === maxLength;
-        });
-
-        // Calculate the score for each sequence
-        sequences.forEach((item) => {
-            item.score = score(item); // for two decimal places 
-        });
-
-        return sequences;
-
-    } catch (error) {
-        console.log(error);
-        return;
-    }
+function assignScore(sequences) {
+    sequences.forEach((item) => {
+        item.score = score(item); // for two decimal places 
+    });
+    return sequences;
 }
 
 
@@ -212,43 +142,5 @@ function cl(...messages) {
         console.log(message + "\n");
     })
 }
-
-function str(obj) {
-    return JSON.stringify(obj);
-}
-
-const defaultRules = [
-    { pattern: /^\s/, name: "WhiteSpace" },
-    { pattern: /(^\/\*(.|\n)+\*\/)|(^\/\/.+)/, name: "Comments" },
-    { pattern: /^[']/, name: "SingleQuotes" },
-    { pattern: /^["]/, name: "DoubleQuotes" },
-    { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
-    { pattern: /^\d+/, name: "Digits" },
-    { pattern: /^[=]/, name: "Assign" },
-    { pattern: /^[\/\\]/, name: "Slashes" },
-    { pattern: /^\=\>/, name: "FatArrow" },
-    { pattern: /^[;]/, name: "SemiColon" },
-    { pattern: /^(\+\+)|(\-\-)/, name: "PlusPlusMinusMinus" },
-    { pattern: /^\<\<|\>\>|[<>]|(\+\=)|(\-\=)|(\*\=)/, name: "Other Operators" },
-    { pattern: /^[+\-*\/]/, name: "Operators" },
-    { pattern: /^[[]/, name: "OpenBracket" },
-    { pattern: /^[\]]/, name: "CloseBracket" },
-    { pattern: /^[(]/, name: "OpenParen" },
-    { pattern: /^[)]/, name: "CloseParen" },
-    { pattern: /^[{]/, name: "OpenBraces" },
-    { pattern: /^[}]/, name: "CloseBraces" },
-    { pattern: /^[!]/, name: "ExclamationMark" },
-    { pattern: /^[^]/, name: "C" },
-    { pattern: /^\$/, name: "Dollar" },
-    { pattern: /^[,]/, name: "Comma" },
-    { pattern: /^[`]/, name: "TempalateLiteral" },
-    { pattern: /^[#]/, name: "OtherCharacters" },
-    { pattern: /^[?]/, name: "QuestionMark" },
-    { pattern: /^[:]/, name: "Colon" },
-    { pattern: /^[>]/, name: "GreaterThan" },
-    { pattern: /^[<]/, name: "LessThan" },
-    { pattern: /^\.(?=\w+)/, name: "Dot" },
-    { pattern: /^[..]/, name: "DoubleDot" },
-];
 
 module.exports = Lexer;
