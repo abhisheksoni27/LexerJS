@@ -1,11 +1,13 @@
 const expect = require('expect.js');
-const Lexer = require('../lexer.js');
+const Lexer = require('../src/lexer.js');
 
 const LexerJS = new Lexer();
 
 describe('LexerJS - Tokenizer Check', () => {
     it('should find all tokens', () => {
-        expect(LexerJS.tokenizer("const a += c;").length).equal(5);     
+        const tokens = LexerJS.tokenizer("const a += c;");
+        console.log(tokens);
+        expect(tokens.length).equal(5);
         expect(LexerJS.tokenizer("for int i = 0;").length).equal(6);
         expect(LexerJS.tokenizer("const i = 0; i++;").length).equal(8);
         expect(LexerJS.tokenizer("for int > i = 0;").length).equal(7);
@@ -19,13 +21,13 @@ describe('LexerJS - Tokenizer Check', () => {
 
     it('should ignore multi-line comments', () => {
         const tokens = LexerJS.tokenizer(`/**
-         * AWESOME
-         * This is ignored
+        * AWESOME
+        * This is ignored
         */
-
+        
         const a = 1;
         const b = 2;
-
+        
         for(int i = 0;)
         `);
 

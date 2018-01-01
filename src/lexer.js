@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const lcs = require('./lcs');
 
 class Lexer {
     constructor(files, options, rules) {
@@ -76,6 +77,44 @@ buffer: ----> ${buffer.substr(pos, pos + 20)}
 
     longestCommonSequences(files) {
 
+        this._preProcess(files);
+
+        //TODO: Try to separate some of the logic into private methods
+        for (let i = 0; i < this.totalFiles; i++) {
+            let fileA = this.TokensOfFiles[i];
+            for (let j = 0; j < this.totalFiles; j++) {
+
+                //Same File
+                if (i == j) break;
+                let fileB = this.TokensOfFiles[j];
+
+                let commonSequence = lcs(fileA.tokens, fileB.tokens);
+                for (let k = 0; k < commonSequence.length; k++) {
+
+                    //Check if exists
+                    let iFlag = checkIfExists(this.result, commonSequence[k]);
+                    // console.log(iFlag)
+                    if (iFlag.exists) {
+                        let item = this.result[iFlag.loc];
+                        item.count++;
+                    } else {
+                        this.result.push({ seq: commonSequence[k], count: 1, total: commonSequence[k].length });
+                    }
+                }
+            }
+
+        }
+
+        // We only need the longest Sequence, 
+        // but the result contains all the sequences, 
+        // which can be further used in other applications.
+        this.result = getMaxLengthSequence(this.result);
+
+        return this.result;
+
+    }
+
+    _preProcess(files) {
         this.files = files ? files : this.files;
         if (!this.files) throw new Error('No File List Provided');
 
@@ -105,60 +144,6 @@ buffer: ----> ${buffer.substr(pos, pos + 20)}
         });
 
         this.maxTokenLength = Math.max(...this.tokenLengthForFiles);
-
-        let iterator = this.maxTokenLength;
-        //TODO: Try to separate some of the logic into private methods
-        while (iterator > 0) {
-            for (let i = 0; i < this.totalFiles; i++) {
-                let fileA = this.TokensOfFiles[i];
-                for (let j = 0; j < this.totalFiles; j++) {
-
-                    //Same File
-                    if (i == j) break;
-
-                    let fileB = this.TokensOfFiles[j];
-                    for (let k = 0; k < fileA.tokens.length || k < fileB.tokens.length; k++) {
-                        let seqA = fileA.tokens.slice(k, iterator);
-
-                        // Because score will be zero, anyway
-                        if (seqA.length < 2) break;
-
-                        let seqB = fileB.tokens;
-                        let match = compareSequences(seqA, seqB);
-
-                        if (match) {
-                            let iFlag = false;
-                            // Check if exists in Result
-                            for (let m = 0; m < this.result.length; m++) {
-
-                                let item = this.result[m];
-                                if (item.seq.join("") === match) {
-                                    item.count++;
-                                    iFlag = true;
-                                    break;
-                                }
-
-                            }
-
-                            if (!iFlag) {
-                                this.result.push({ seq: seqA, count: 1, total: seqA.length });
-                            }
-                        }
-                    }
-                }
-
-            }
-            iterator--;
-
-        }
-
-        // We only need the longest Sequence, 
-        // but the result contains all the sequences, 
-        // which can be further used in other applications.
-        this.result = getMaxLengthSequence(this.result);
-
-        return this.result;
-
     }
 }
 
@@ -167,16 +152,13 @@ buffer: ----> ${buffer.substr(pos, pos + 20)}
  * in JavaScript, as there is no first-hand support for access modifiers.
  */
 
-function compareSequences(seqA, seqB) {
-
-    let seqAJoined = addSlashes(seqA);
-    let seqBJoined = addSlashes(seqB);
-
-    let match = new RegExp(seqAJoined, 'gm').exec(seqBJoined);
-    // return first match if exists
-    if (match) return match[0];
-
-    return;
+function checkIfExists(source, target) {
+    let flag = false;
+    for (let i = 0; i < source.length; i++) {
+        let item = source[i];
+        if (item.seq.join("") == target.join("")) return { exists: true, loc: i };
+    }
+    return { exists: false, loc: null };
 }
 
 /**
@@ -231,11 +213,6 @@ function cl(...messages) {
     })
 }
 
-function addSlashes(string) {
-    // To escape characters required by RegExp
-    return string.slice(0).join("").replace(/[.*+?^${}`~()|[\]\\]/g, "\\$&");
-}
-
 function str(obj) {
     return JSON.stringify(obj);
 }
@@ -243,31 +220,31 @@ function str(obj) {
 const defaultRules = [
     { pattern: /^\s/, name: "WhiteSpace" },
     { pattern: /(^\/\*(.|\n)+\*\/)|(^\/\/.+)/, name: "Comments" },
-    { pattern: /^\'(.+)?\'/, name: "SingleQuotes" },
-    { pattern: /^\"(.+)?\"/, name: "DoubleQuotes" },
+    { pattern: /^[']/, name: "SingleQuotes" },
+    { pattern: /^["]/, name: "DoubleQuotes" },
     { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
-    { pattern: /^[=]/, name: "Assign" },
     { pattern: /^\d+/, name: "Digits" },
+    { pattern: /^[=]/, name: "Assign" },
     { pattern: /^[\/\\]/, name: "Slashes" },
     { pattern: /^\=\>/, name: "FatArrow" },
+    { pattern: /^[;]/, name: "SemiColon" },
+    { pattern: /^(\+\+)|(\-\-)/, name: "PlusPlusMinusMinus" },
+    { pattern: /^\<\<|\>\>|[<>]|(\+\=)|(\-\=)|(\*\=)/, name: "Other Operators" },
+    { pattern: /^[+\-*\/]/, name: "Operators" },
     { pattern: /^[[]/, name: "OpenBracket" },
     { pattern: /^[\]]/, name: "CloseBracket" },
     { pattern: /^[(]/, name: "OpenParen" },
     { pattern: /^[)]/, name: "CloseParen" },
     { pattern: /^[{]/, name: "OpenBraces" },
     { pattern: /^[}]/, name: "CloseBraces" },
-    { pattern: /^[;]/, name: "SemiColon" },
     { pattern: /^[!]/, name: "ExclamationMark" },
     { pattern: /^[^]/, name: "C" },
-    { pattern: /^\<\<|\>\>|[<>]|\+=|\-=|\*=/, name: "Other Operators" },
     { pattern: /^\$/, name: "Dollar" },
     { pattern: /^[,]/, name: "Comma" },
     { pattern: /^[`]/, name: "TempalateLiteral" },
     { pattern: /^[#]/, name: "OtherCharacters" },
     { pattern: /^[?]/, name: "QuestionMark" },
     { pattern: /^[:]/, name: "Colon" },
-    { pattern: /^\+\+|--/, name: "PlusPlusMinusMinus" },
-    { pattern: /^[+\-*\/]/, name: "Operators" },
     { pattern: /^[>]/, name: "GreaterThan" },
     { pattern: /^[<]/, name: "LessThan" },
     { pattern: /^\.(?=\w+)/, name: "Dot" },

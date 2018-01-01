@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const Lexer = require('./lexer.js');
+const Lexer = require('./src/lexer');
 const fs = require('fs') // For reading files
 const meow = require('meow');
 const usageString = `

@@ -1,1 +1,0 @@
-{ "file": [")", ";", "animateString", "(", ">", "We", "hope", "you", "enjoy", "the", "new", "version", "of", "Chalk", "2", "!", "<", "3", ">", ")", ">", "then", "(", "(", ")", "=", ">", "console", ".", "log", "(", ")", ")", ";"] }
