@@ -21,8 +21,6 @@ function assignScore(sequences) {
     return sequences;
 }
 
-
-
 /**
  * Calculate score for each sub-sequence
  * score = log2(count) * log2(tokens)
@@ -40,7 +38,7 @@ function cl(...messages) {
 }
 
 function saveJSON(data, name) {
-    fs.writeFileSync(`${__dirname}/${name}.json`, JSON.stringify(data))
+    fs.writeFileSync(`${name}.json`, JSON.stringify(data))
 }
 
 function saveCSV(data, name) {
@@ -69,6 +67,5 @@ function saveCSV(data, name) {
 }
 
 module.exports = {
-
     score, cl, assignScore, checkIfExists, saveJSON, saveCSV
 }
