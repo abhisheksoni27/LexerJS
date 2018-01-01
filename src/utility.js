@@ -2,7 +2,7 @@
  * Utility Functions
  */
 
- const fs = require('fs');
+const fs = require('fs');
 
 // Check if item exists in collection
 function checkIfExists(collection, target) {
@@ -38,7 +38,13 @@ function cl(...messages) {
 }
 
 function saveJSON(data, name) {
-    fs.writeFileSync(`${name}.json`, JSON.stringify(data))
+    try {
+        fs.writeFileSync(`${name}.json`, JSON.stringify(data));
+    } catch (error) {
+        return false;
+    }
+
+    return true;
 }
 
 function saveCSV(data, name) {

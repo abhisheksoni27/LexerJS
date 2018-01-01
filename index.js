@@ -133,12 +133,12 @@ function run() {
 // Save Result
 function saveResult(resutlt) {
     const outputFileExt = cli.flags.o;
-    
-    const saveStatus = outputFileExt === "csv"
-    ? utility.saveCSV(result, 'result')
-    : utility.saveJSON(result, 'result')
-    
-    if (saveStatus) console.log(`Results successfully saved at ${__dirname}/${outputFileExt}.csv}`);
+    const name = 'result';
+    const saveStatus = (outputFileExt === "csv")
+        ? utility.saveCSV(result, name)
+        : utility.saveJSON(result, name)
+
+    if (saveStatus) console.log(`Results successfully saved at ${__dirname}/${name}.${outputFileExt}`);
 }
 
 const result = run();

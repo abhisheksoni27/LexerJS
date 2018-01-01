@@ -51,4 +51,45 @@ function lcs(seqA, seqB) {
     return longestCommonSequences;
 }
 
-module.exports = lcs;
+function lcsOptimised(seqA, seqB) {
+
+    const longestCommonSequences = [];
+    const m = seqA.length, n = seqB.length;
+    let maxLength = 1;
+    
+    for (let i = 0; i < m; i++) {
+        let cSeq = [];
+        for (let j = 0; j < n; j++) {
+
+            // Match
+            if (seqA[i] === seqB[j]) {
+                let str = seqA[i];
+                cSeq.push(seqA[i]);
+                let k = 1;
+
+                // As soon as we have found a match, we go diagonally across, as far as we can
+                // As long as we still have a matching chracter at the next position
+                // Or have not reached the end of the sequences
+                
+                while ((i + k < seqA.length && j + k < seqB.length) && (seqA[i + k] === seqB[j + k])) {
+                    str += seqA[i + k];
+                    cSeq.push(seqA[i + k]);
+                    k++;
+                }
+
+                if (cSeq.length > maxLength) {
+                    maxLength = cSeq.length;
+                    longestCommonSequences.push(cSeq);
+                }
+
+                if (longestCommonSequences.length == 1) {
+                    return longestCommonSequences.filter((seq) => {
+                        return seq.length === maxLength;
+                    });
+                }
+            }
+        }
+    }
+}
+
+module.exports = { lcs, lcsOptimised };

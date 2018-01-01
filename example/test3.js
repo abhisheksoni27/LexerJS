@@ -1,3 +1,4 @@
-const b = 11 + 33;
-yes;
-bye(1);
+function add(a, b){
+    return a + b;
+    bleh;
+}
