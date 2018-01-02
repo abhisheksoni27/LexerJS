@@ -3,6 +3,7 @@
  */
 
 const fs = require('fs');
+const tempDirName = '.lexerJStemp';
 
 // Check if item exists in collection
 function checkIfExists(collection, target) {
@@ -71,6 +72,7 @@ function saveCSV(data, name) {
 
     return false;
 }
+
 
 module.exports = {
     score, cl, assignScore, checkIfExists, saveJSON, saveCSV
