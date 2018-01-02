@@ -30,6 +30,14 @@ let sum = add(11 + 11);
 
 The longest common shared sequence between these two files is the *entire function definition.*
 
+**LCSS**
+
+```js
+function add(a, b){
+    return a + b;
+}
+```
+
 As you can see below, that's what this program finds.
 
 ![Test file 1](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png)
@@ -40,6 +48,10 @@ As you can see below, that's what this program finds.
 
 # Installation
 
-# Options
+# Running
+
+## Options
+
+# Test GitHub project
 
 # Copyright
