@@ -3,4 +3,3 @@ function add(a, b){
 }
 
 const sum = add(11 + 11);
-
