@@ -17,10 +17,15 @@ try {
 
     try {
         if (fs.stat(`${tempDir}/${repoName}`)) {
+            // Clone
             process.chdir(tempDir);
-            exec(`git clone https://github.com/${ownerName}/${repoName}.git`);
             console.log(`Cloning ${repoName}...`);
+            exec(`git clone https://github.com/${ownerName}/${repoName}.git`);
+            
+            // Copy (for detached state)
             exec(`cp -R ${dirName} ${dirName}-copied`);
+            
+            // Detach
             process.chdir(`${repoName}`);
             exec(`git reset --hard HEAD~${backstep}`);
             checkOutCommit(repoName, 15);
@@ -30,4 +35,3 @@ try {
     }
 
 }
-
