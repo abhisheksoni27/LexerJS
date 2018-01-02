@@ -107,8 +107,15 @@ function preProcessFiles() {
 
     // Find tokens for each file
     TokensOfFiles.forEach((file) => {
-        let fileString = fs.readFileSync(file.name).toString();
-        file.tokens = tokenizer(fileString, file.name);
+
+        try {
+            let fileString = fs.readFileSync(file.name).toString();
+            file.tokens = tokenizer(fileString, false);
+        } catch (ReadError) {
+            console.log(ReadError);
+            process.exit(1);
+        }
+
         if (saveTokens) {
             try {
                 fs.writeFileSync(`tokens/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens));
