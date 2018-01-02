@@ -1,4 +1,5 @@
 node_modules
 tokens/*
 zips/*
-result.*
+result.json
+result.csv
