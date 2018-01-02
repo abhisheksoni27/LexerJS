@@ -14,13 +14,13 @@ function longestCommonSequences(TokensOfFiles) {
     let result = [];
     for (let i = 0; i < totalFiles; i++) {
         let fileA = TokensOfFiles[i];
-        for (let j = 0; j < totalFiles; j++) {
-            
+        for (let j = 1; j < totalFiles; j++) {
+
             //Same File
             if (i == j) break;
             let fileB = TokensOfFiles[j];
 
-            let commonSequence = lcsbase.lcsOptimised(fileA.tokens, fileB.tokens);
+            let commonSequence = lcsbase.lcs(fileA.tokens, fileB.tokens);
             for (let k = 0; k < commonSequence.length; k++) {
 
                 //Check if exists
@@ -30,7 +30,7 @@ function longestCommonSequences(TokensOfFiles) {
                     let item = result[iFlag.loc];
                     item.count++;
                 } else {
-                    result.push({ seq: commonSequence[k], count: 2, total: commonSequence[k].length });
+                    result.push({ seq: commonSequence[k], count: 2, total: commonSequence[k].length, /*loc: [fileB.name, fileA.name]*/ });
                 }
             }
         }

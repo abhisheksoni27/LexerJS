@@ -26,7 +26,6 @@ describe('LexerJS - Tokenizer Check', () => {
         
         for(int i = 0;)
         `);
-
         expect(tokens.length).equal(18);
     });
 
@@ -39,4 +38,31 @@ describe('LexerJS - Tokenizer Check', () => {
         `);
         expect(tokens.length).equal(35);
     });
+
+    it(``, () => {
+
+        const tokens = tokenizer(`
+   
+        var bleh = "?"
+        var OPTIONS = [
+            "printWidth",
+            "tabWidth",
+            "singleQuote",
+            "trailingComma",
+            "bracketSpacing",
+            "jsxBracketSameLine",
+            "parser",
+            "semi",
+            "useTabs",
+            "insertPragma",
+            "requirePragma",
+            "proseWrap",
+            "arrowParens",
+            "doc",
+            "ast",
+            "output2"
+        ];
+        `);
+        expect(tokens.length).equal(75);
+    })
 })

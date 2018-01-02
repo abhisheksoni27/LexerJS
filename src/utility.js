@@ -19,6 +19,11 @@ function assignScore(sequences) {
     sequences.forEach((item) => {
         item.score = score(item); // for two decimal places 
     });
+
+    sequence = sequences.sort((seqA, seqB) => {
+        return seqA.total < seqB.total;
+    });
+
     return sequences;
 }
 
