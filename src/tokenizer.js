@@ -9,6 +9,8 @@ const rules = [
     { pattern: /^[\/\\]/, name: "Slashes" },
     { pattern: /^\=\>/, name: "FatArrow" },
     { pattern: /^[;]/, name: "SemiColon" },
+    { pattern: /^\.(?=\w+)/, name: "Dot" },
+    { pattern: /^[\.\.]/, name: "DoubleDot" },
     { pattern: /^(\+\+)|(\-\-)/, name: "PlusPlusMinusMinus" },
     { pattern: /^\<\<|\>\>|[<>]|(\+\=)|(\-\=)|(\*\=)/, name: "Other Operators" },
     { pattern: /^[+\-*\/]/, name: "Operators" },
@@ -32,8 +34,6 @@ const rules = [
     { pattern: /^[:]/, name: "Colon" },
     { pattern: /^[>]/, name: "GreaterThan" },
     { pattern: /^[<]/, name: "LessThan" },
-    { pattern: /^\.(?=\w+)/, name: "Dot" },
-    { pattern: /^[..]/, name: "DoubleDot" },
 ];
 
 function tokenizer(sourceCode, fileName) {
