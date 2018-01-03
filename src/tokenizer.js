@@ -1,39 +1,43 @@
 const rules = [
+
+    // { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
+    // { pattern: /^\d+/, name: "Digits" },
     { pattern: /^\s/, name: "WhiteSpace" },
     { pattern: /(^\/\*(.|\n)+\*\/)|(^\/\/.+)/, name: "Comments" },
-    { pattern: /^[a-zA-Z_]\w*/, name: "Keywords|Identifiers" },
-    { pattern: /^\d+/, name: "Digits" },
-    { pattern: /^[']/, name: "SingleQuotes" },
-    { pattern: /^["]/, name: "DoubleQuotes" },
-    { pattern: /^[=]/, name: "Assign" },
-    { pattern: /^[\/\\]/, name: "Slashes" },
-    { pattern: /^\=\>/, name: "FatArrow" },
-    { pattern: /^[;]/, name: "SemiColon" },
-    { pattern: /^(\+\+)|(\-\-)/, name: "PlusPlusMinusMinus" },
-    { pattern: /^\<\<|\>\>|[<>]|(\+\=)|(\-\=)|(\*\=)/, name: "Other Operators" },
-    { pattern: /^[+\-*\/]/, name: "Operators" },
-    { pattern: /^[[]/, name: "OpenBracket" },
-    { pattern: /^[\]]/, name: "CloseBracket" },
-    { pattern: /^[(]/, name: "OpenParen" },
-    { pattern: /^[)]/, name: "CloseParen" },
-    { pattern: /^[{]/, name: "OpenBraces" },
-    { pattern: /^[}]/, name: "CloseBraces" },
-    { pattern: /^[!]/, name: "ExclamationMark" },
-    { pattern: /^[^]/, name: "C" },
-    { pattern: /^\$/, name: "Dollar" },
-    { pattern: /^[,]/, name: "Comma" },
-    { pattern: /^[`]/, name: "TempalateLiteral" },
-    { pattern: /^[#]/, name: "OtherCharacters" },
-    { pattern: /^[?]/, name: "QuestionMark" },
-    { pattern: /^\&\&/, name: "AND" },
-    { pattern: /^[&]/, name: "Bit-AND" },
-    { pattern: /^\|\|/, name: "OR" },
-    { pattern: /^[|]/, name: "Bit-OR" },
-    { pattern: /^[:]/, name: "Colon" },
-    { pattern: /^[>]/, name: "GreaterThan" },
-    { pattern: /^[<]/, name: "LessThan" },
-    { pattern: /^\.(?=\w+)/, name: "Dot" },
-    { pattern: /^[..]/, name: "DoubleDot" },
+    // { pattern: /^[']/, name: "SingleQuotes" },
+    // { pattern: /^["]/, name: "DoubleQuotes" },
+    // { pattern: /^[\/\\]/, name: "Slashes" },
+    // { pattern: /^\=\>/, name: "FatArrow" },
+    // { pattern: /^[;]/, name: "SemiColon" },
+    // { pattern: /^\.(?=\w+)/, name: "Dot" },
+    // { pattern: /^\.\./, name: "DoubleDot" },
+    // { pattern: /^\.\.\./, name: "Ellipsis" },
+    // { pattern: /^[\[]/, name: "OpenBracket" },
+    // { pattern: /^[\]]/, name: "CloseBracket" },
+    // { pattern: /^[(]/, name: "OpenParen" },
+    // { pattern: /^[)]/, name: "CloseParen" },
+    // { pattern: /^[{]/, name: "OpenBraces" },
+    // { pattern: /^[}]/, name: "CloseBraces" },
+    // { pattern: /^[=]/, name: "Assign" },
+    // { pattern: /^(\+\+)|(\-\-)/, name: "PlusPlusMinusMinus" },
+    // { pattern: /^\<\<|\>\>|[<>]|(\+\=)|(\-\=)|(\*\=)|(\=\=)/, name: "Other Operators" },
+    // { pattern: /^[+\-*\/]/, name: "Operators" },
+    // { pattern: /^[!]/, name: "ExclamationMark" },
+    // { pattern: /^[^]/, name: "C" },
+    // { pattern: /^\$/, name: "Dollar" },
+    // { pattern: /^[,]/, name: "Comma" },
+    // { pattern: /^[`]/, name: "TempalateLiteral" },
+    // { pattern: /^[#]/, name: "OtherCharacters" },
+    // { pattern: /^[?]/, name: "QuestionMark" },
+    // { pattern: /^\&\&/, name: "AND" },
+    // { pattern: /^[&]/, name: "Bit-AND" },
+    // { pattern: /^\|\|/, name: "OR" },
+    // { pattern: /^[|]/, name: "Bit-OR" },
+    // { pattern: /^[:]/, name: "Colon" },
+    {
+        pattern: /^([?!#$~`:;%,\'\"(){}\_[\]])|^(\>\>|\<\<|\+=|\-=|\*=|\/=|\-\-|\+\+)|^(\=\=\=)|^(\=\=)|^([\+\*\-\=\>\<\/\\])|^(\&\&)|^(\|\|)|^(\&)|^(\|)|^((\.\.\.)|(\.\.)|(\.(?=\w+)))|(\.)|(^\d+)|(^[a-zA-Z_]\w*)/,
+        name: "ALL"
+    }
 ];
 
 function tokenizer(sourceCode, fileName) {
@@ -57,6 +61,18 @@ function tokenizer(sourceCode, fileName) {
                     previousPos = pos;
                     break;
                 }
+                // let max = 0;
+                // let maxIndex = 0;
+
+                // match.forEach((e, i) => {
+                //     if(e){
+                //         if (e.length > max) {
+                //             max = e.length;
+                //             maxIndex = i;
+                //         }
+                //     }
+                // });
+
                 pos += match[0].length;
                 previousPos = pos;
                 tokens.push(match[0]);

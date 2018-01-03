@@ -3,3 +3,4 @@ tokens/*
 zips/*
 result.json
 result.csv
+.lexerJSTemp/*

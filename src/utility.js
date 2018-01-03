@@ -3,6 +3,7 @@
  */
 
 const fs = require('fs');
+const tempDirName = '.lexerJStemp';
 
 // Check if item exists in collection
 function checkIfExists(collection, target) {
@@ -18,6 +19,11 @@ function assignScore(sequences) {
     sequences.forEach((item) => {
         item.score = score(item); // for two decimal places 
     });
+
+    sequence = sequences.sort((seqA, seqB) => {
+        return seqA.total < seqB.total;
+    });
+
     return sequences;
 }
 
@@ -72,6 +78,27 @@ function saveCSV(data, name) {
     return false;
 }
 
+function findJSFiles(dir, fileList) {
+
+    let files = fs.readdirSync(dir);
+    fileList = fileList ? fileList : [];
+
+    files.forEach((file) => {
+
+        if (fs.statSync(dir + file).isDirectory()) {
+            fileList = findJSFiles(dir + file + '/', fileList);
+        }
+        else {
+            if (file.split(".").pop() === "js") fileList.push(dir + file);
+        }
+    });
+    return fileList;
+}
+
+function randomValue(start, end) {
+    return start + Math.round(Math.random() * end);
+}
+
 module.exports = {
-    score, cl, assignScore, checkIfExists, saveJSON, saveCSV
+    score, cl, assignScore, checkIfExists, saveJSON, saveCSV, findJSFiles, randomValue
 }
