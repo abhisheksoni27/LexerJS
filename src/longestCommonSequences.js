@@ -20,7 +20,7 @@ function longestCommonSequences(TokensOfFiles) {
             if (i == j) break;
             let fileB = TokensOfFiles[j];
 
-            let commonSequence = lcsbase.lcs(fileA.tokens, fileB.tokens);
+            let commonSequence = lcsbase.lcsOptimised(fileA.tokens, fileB.tokens);
             for (let k = 0; k < commonSequence.length; k++) {
 
                 //Check if exists
