@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha tests",
-    "github-examples":"node runGitHubExample.js"
+    "github-examples": "node runGitHubExample.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme",
   "dependencies": {
-    "meow": "^4.0.0"
+    "chalk": "^2.3.0",
+    "meow": "^4.0.0",
+    "terminal-paginator": "^2.0.2"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",

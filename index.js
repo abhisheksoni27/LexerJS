@@ -5,19 +5,20 @@ const path = require('path');
 
 const utility = require('./src/utility')
 const tokenizer = require('./src/tokenizer');
-
+const spawn = require('child_process').exec;
+const chalk = require('chalk');
 const meow = require('meow');
 const usageString = `
 Usage
-  $ lexerJS <Input: CSV or JSON file> [options]
+$ lexerJS <Input: CSV or JSON file> [options]
 
 Options
-  --saveTokens, -s  Save found tokens in a JSON file
-  --output, -o  JSON or CSV output
+--saveTokens, -s  Save found tokens in a JSON file
+--output, -o  JSON or CSV output
 
 Examples
-  $ foo input.csv --tokens
-  TODO // ADD EXAMPLES
+$ foo input.csv --tokens
+TODO // ADD EXAMPLES
 `;
 
 const cli = meow(usageString, {
@@ -149,4 +150,28 @@ function saveResult(resutlt) {
 }
 
 const result = run();
+console.log(result);
+
+
+// Display Results
+console.log('\x1Bc');
+let resultString = `${chalk.red('LexerJS')} - Results \n`;
+
+result.forEach((el, i) => {
+    resultString += `Result ${chalk.cyan(`#${i + 1}`)}\n\n`;
+    el.loc.forEach((item) => {
+        resultString += `File ${chalk.blue(i + 1)}: ${item}\t`;
+    });
+    resultString += "\n";
+    resultString += `${chalk.yellow(result[i].seq)}\n\n`;
+})
+
+if (result.length > 1) {
+    resultString += `${result.length} results found.\n`;
+} else {
+    resultString += `1 result found.\n`;
+}
+
+
+console.log(resultString);
 saveResult(result);

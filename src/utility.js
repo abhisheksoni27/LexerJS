@@ -10,7 +10,7 @@ function checkIfExists(collection, target) {
     let flag = false;
     for (let i = 0; i < collection.length; i++) {
         let item = collection[i];
-        if (item.seq.join("") == target.join("")) return { exists: true, loc: i };
+        if (item.seq == target) return { exists: true, loc: i };
     }
     return { exists: false, loc: null };
 }

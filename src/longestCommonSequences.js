@@ -29,8 +29,10 @@ function longestCommonSequences(TokensOfFiles) {
                 if (iFlag.exists) {
                     let item = result[iFlag.loc];
                     item.count++;
+                    item.loc.add(fileB.name);
+                    item.loc.add(fileA.name);
                 } else {
-                    result.push({ seq: commonSequence[k], count: 2, total: commonSequence[k].length, /*loc: [fileB.name, fileA.name]*/ });
+                    result.push({ seq: commonSequence[k], count: 2, total: commonSequence[k].length, loc: new Set([fileB.name, fileA.name]) });
                 }
             }
         }
