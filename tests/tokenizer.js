@@ -39,7 +39,7 @@ describe('LexerJS - Tokenizer Check', () => {
         expect(tokens.length).equal(35);
     });
 
-    it(``, () => {
+    it(`should ignore line breaks`, () => {
 
         const tokens = tokenizer(`
    

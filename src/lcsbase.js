@@ -53,43 +53,40 @@ function lcs(seqA, seqB) {
 
 function lcsOptimised(seqA, seqB) {
 
-    const longestCommonSequences = [];
-    const m = seqA.length, n = seqB.length;
-    let maxLength = 1;
-    
-    for (let i = 0; i < m; i++) {
-        let cSeq = [];
-        for (let j = 0; j < n; j++) {
+    let longestCommonSubstring = new Set();
+    let maxLength = 0;
+    for (let i = 0; i < seqA.length; ++i) {
 
-            // Match
+        for (let j = 0; j < seqB.length; ++j) {
+
+            // Same string
             if (seqA[i] === seqB[j]) {
+
                 let str = seqA[i];
-                cSeq.push(seqA[i]);
                 let k = 1;
 
-                // As soon as we have found a match, we go diagonally across, as far as we can
-                // As long as we still have a matching chracter at the next position
-                // Or have not reached the end of the sequences
-                
-                while ((i + k < seqA.length && j + k < seqB.length) && (seqA[i + k] === seqB[j + k])) {
+                while (i + k < seqA.length && j + k < seqB.length
+                    && seqA[i + k] === seqB[j + k]) {
                     str += seqA[i + k];
-                    cSeq.push(seqA[i + k]);
                     k++;
                 }
 
-                if (cSeq.length > maxLength) {
-                    maxLength = cSeq.length;
-                    longestCommonSequences.push(cSeq);
-                }
+                let testLength = Array.isArray(str) ? str.length : str.split("").length;
 
-                if (longestCommonSequences.length == 1) {
-                    return longestCommonSequences.filter((seq) => {
-                        return seq.length === maxLength;
-                    });
+                if (testLength > maxLength) {
+                    maxLength = testLength;
+                    longestCommonSubstring.clear();
+                    longestCommonSubstring.add(str);
+                }
+                else if (str.length == maxLength) {
+                    longestCommonSubstring.add(str);
                 }
             }
         }
     }
+
+    return [...longestCommonSubstring];
+
 }
 
 module.exports = { lcs, lcsOptimised };
