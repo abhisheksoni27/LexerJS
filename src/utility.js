@@ -99,6 +99,43 @@ function randomValue(start, end) {
     return start + Math.round(Math.random() * end);
 }
 
+function getFileFromGithub(opts) {
+
+    if (!opts.ownerName || !opts.repoName || !opts.fileName) return;
+
+    return new Promise((resolve, reject) => {
+
+        const https = require('https');
+        let path = "";
+        if (opts.sha) {
+            path = `/repos/${opts.ownerName}/${opts.repoName}/contents/${opts.fileName}?ref=${opts.sha}`;
+        } else {
+            path = `/repos/${opts.ownerName}/${opts.repoName}/contents/${opts.fileName}`;
+        }
+
+        const options = {
+            host: 'api.github.com',
+            path: path,
+            method: 'GET',
+            headers: {
+                Accept: " application/vnd.github.v3.raw",
+                'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
+            },
+        };
+
+        https.get(options, (res) => {
+            if (res.statusCode !== 200) reject("HTTP ERROR - " + res.statusCode);
+            let rawData = '';
+            res.on('data', (chunk) => { rawData += chunk; });
+            res.on("end", () => {
+                resolve(rawData);
+            });
+            res.on("error", (err) => { reject(err) });
+        });
+    });
+
+}
+
 module.exports = {
-    score, cl, assignScore, checkIfExists, saveJSON, saveCSV, findJSFiles, randomValue
+    score, cl, assignScore, checkIfExists, saveJSON, saveCSV, findJSFiles, randomValue, getFileFromGithub
 }
