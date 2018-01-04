@@ -35,14 +35,6 @@ function score(item) {
     return (Math.log2(item.count) * Math.log2(item.total)).toFixed(2);
 }
 
-
-// For Logging, because console.log is too long to type
-function cl(...messages) {
-    messages.forEach((message) => {
-        console.log(message + "\n");
-    })
-}
-
 function saveJSON(data, name) {
     try {
         fs.writeFileSync(`${name}.json`, JSON.stringify(data));
@@ -57,7 +49,7 @@ function saveCSV(data, name) {
 
     const fileStream = fs.createWriteStream(`${name}.csv`);
 
-    fileStream.once('open', function (fd) {
+    fileStream.once('open', function(fd) {
 
         fileStream.write("score,tokens,count,“sourcecode”\n");
         data.forEach((item) => {
@@ -87,8 +79,7 @@ function findJSFiles(dir, fileList) {
 
         if (fs.statSync(dir + file).isDirectory()) {
             fileList = findJSFiles(dir + file + '/', fileList);
-        }
-        else {
+        } else {
             if (file.split(".").pop() === "js") fileList.push(dir + file);
         }
     });
@@ -137,5 +128,12 @@ function getFileFromGithub(opts) {
 }
 
 module.exports = {
-    score, cl, assignScore, checkIfExists, saveJSON, saveCSV, findJSFiles, randomValue, getFileFromGithub
+    score,
+    assignScore,
+    checkIfExists,
+    saveJSON,
+    saveCSV,
+    findJSFiles,
+    randomValue,
+    getFileFromGithub
 }
