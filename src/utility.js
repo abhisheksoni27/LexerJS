@@ -4,6 +4,17 @@
 
 const fs = require('fs');
 const tempDirName = '.lexerJStemp';
+const https = require('https')
+let options = {
+    host: 'api.github.com',
+    path: "",
+    method: 'GET',
+    headers: {
+        Accept: "application/vnd.github.v3.json",
+        Authorization: "token 07bebe6910646cac6448df4ed1faf13ca2d6b49c",
+        'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
+    },
+};
 
 // Check if item exists in collection
 function checkIfExists(collection, target) {
@@ -127,6 +138,40 @@ function getFileFromGithub(opts) {
 
 }
 
+
+function requestPromise(path, callback) {
+
+    return new Promise((resolve, reject) => {
+
+        if (!path) reject("Please provide a API path.");
+        const iOpts = Object.assign({}, options, {
+            path: path
+        });
+
+        https.get(iOpts, (res) => {
+
+            if (res.statusCode !== 200) reject(err.error);
+
+            let data = "";
+            res.on("data", (chunk => {
+                data += chunk;
+            }));
+
+            res.on("end", () => {
+                data = JSON.parse(data);
+
+                data.forEach((entry) => {
+                    callback(entry.sha);
+                });
+
+                resolve();
+
+            });
+
+        });
+    });
+}
+
 module.exports = {
     score,
     assignScore,
@@ -135,5 +180,6 @@ module.exports = {
     saveCSV,
     findJSFiles,
     randomValue,
-    getFileFromGithub
+    getFileFromGithub,
+    requestPromise
 }
