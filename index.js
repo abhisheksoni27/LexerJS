@@ -151,6 +151,7 @@ function saveResult(resutlt) {
 }
 
 const result = run();
+saveResult(result);
 // console.log(result);
 
 
@@ -175,4 +176,3 @@ const result = run();
 
 
 // console.log(resultString);
-saveResult(result);
