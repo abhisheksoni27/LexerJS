@@ -52,7 +52,6 @@ function lcs(seqA, seqB) {
 }
 
 function lcsOptimised(seqA, seqB) {
-
     let longestCommonSubstring = new Set();
     let maxLength = 0;
     for (let i = 0; i < seqA.length; ++i) {
@@ -62,17 +61,20 @@ function lcsOptimised(seqA, seqB) {
             // Same string
             if (seqA[i] === seqB[j]) {
 
-                let str = seqA[i];
+                let str = [seqA[i]];
                 let k = 1;
 
                 while (i + k < seqA.length && j + k < seqB.length
                     && seqA[i + k] === seqB[j + k]) {
-                    str += seqA[i + k];
+                    str.push(seqA[i + k]);
                     k++;
                 }
 
-                let testLength = Array.isArray(str) ? str.length : str.split("").length;
+                let testLength = str.length;
 
+                if (longestCommonSubstring.size == 1) {
+                }
+                
                 if (testLength > maxLength) {
                     maxLength = testLength;
                     longestCommonSubstring.clear();
@@ -84,7 +86,6 @@ function lcsOptimised(seqA, seqB) {
             }
         }
     }
-
     return [...longestCommonSubstring];
 
 }

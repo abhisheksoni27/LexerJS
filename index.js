@@ -107,10 +107,11 @@ function preProcessFiles() {
     }
 
     // Find tokens for each file
-    TokensOfFiles.forEach((file) => {
+    TokensOfFiles.forEach((file, i) => {
 
         try {
             let fileString = fs.readFileSync(file.name).toString();
+            console.log(`Processing ${chalk.red(file.name)}.js, File ${chalk.green(i + 1)} out of ${chalk.blue(TokensOfFiles.length)}`)
             file.tokens = tokenizer(fileString, false);
         } catch (ReadError) {
             console.log(ReadError);

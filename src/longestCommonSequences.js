@@ -1,5 +1,6 @@
 const lcsbase = require('./lcsbase');
 const utility = require('./utility');
+const chalk = require('chalk');
 
 function longestCommonSequences(TokensOfFiles) {
 
@@ -19,7 +20,7 @@ function longestCommonSequences(TokensOfFiles) {
             //Same File
             if (i == j) break;
             let fileB = TokensOfFiles[j];
-
+            console.log(`Comparing File ${chalk.red(fileA.name)} and ${chalk.blue(fileB.name)}`);
             let commonSequence = lcsbase.lcsOptimised(fileA.tokens, fileB.tokens);
             for (let k = 0; k < commonSequence.length; k++) {
 
@@ -40,6 +41,7 @@ function longestCommonSequences(TokensOfFiles) {
     }
 
     result = utility.assignScore(result);
+
 
     return result;
 

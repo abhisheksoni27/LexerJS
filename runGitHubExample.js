@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 const process = require('process');
 const async = require('async');
-const execSync = require('child_process').execSync;
+const spawn = require('child_process').spawn;
 const l = console.log;
 const https = require('https');
 const utility = require('./src/utility');
@@ -96,12 +96,16 @@ fs.readFile("githubResults.json")
         //     if (err) throw err;
         // });
 
-        let testFileList = utility.findJSFiles(tempDir + '/');
-        return fs.writeFile('g-examples.json', JSON.stringify({ files: testFileList }));
+        // let testFileList = utility.findJSFiles(tempDir + '/');
+        // return fs.writeFile('g-examples.json', JSON.stringify({ files: testFileList }));
     })
     .then(() => {
         // Config file saved
-        execSync('lexerJS g-examples.json -s');
+        const lexerJS = spawn('lexerJS', ['g-examples.json', '-s']);
+        
+        lexerJS.stderr.on("data",(data)=>console.log(data.toString()))
+        lexerJS.stdout.on("data",(data)=>console.log(data.toString()))
+        lexerJS.on("close",()=>console.log("Done!"))
     })
     .catch(err => console.log(err));
 
