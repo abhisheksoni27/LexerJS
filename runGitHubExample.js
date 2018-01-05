@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 const process = require('process');
 const async = require('async');
-
+const execSync = require('child_process').execSync;
 const l = console.log;
 const https = require('https');
 const utility = require('./src/utility');
@@ -92,9 +92,16 @@ fs.readFile("githubResults.json")
         // Now we have all the commits
         commits = JSON.parse(res);
 
-        async.each(commits, downloadFile, function (err) {
-            if (err) throw err;
-        });
+        // async.each(commits, downloadFile, function (err) {
+        //     if (err) throw err;
+        // });
+
+        let testFileList = utility.findJSFiles(tempDir + '/');
+        return fs.writeFile('g-examples.json', JSON.stringify({ files: testFileList }));
+    })
+    .then(() => {
+        // Config file saved
+        execSync('lexerJS g-examples.json -s');
     })
     .catch(err => console.log(err));
 
