@@ -101,11 +101,16 @@ fs.readFile("githubResults.json")
     })
     .then(() => {
         // Config file saved
+        const startTime = new Date();
         const lexerJS = spawn('lexerJS', ['g-examples.json', '-s']);
-        
-        lexerJS.stderr.on("data",(data)=>console.log(data.toString()))
-        lexerJS.stdout.on("data",(data)=>console.log(data.toString()))
-        lexerJS.on("close",()=>console.log("Done!"))
+
+        lexerJS.stderr.on("data", (data) => console.log(data.toString()))
+        lexerJS.stdout.on("data", (data) => console.log(data.toString()))
+        lexerJS.on("close", () => {
+            const endTime = new Date();
+            console.log(`Total time taken: ${endTime - startTime}ms`);
+        })
+
     })
     .catch(err => console.log(err));
 

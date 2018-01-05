@@ -15,10 +15,12 @@ function longestCommonSequences(TokensOfFiles) {
     let result = [];
     for (let i = 0; i < totalFiles; i++) {
         let fileA = TokensOfFiles[i];
-        for (let j = 1; j < totalFiles; j++) {
-
+        for (let j = i + 1; j < totalFiles; j++) {
+            console.log(i + "-------------------->" + j);
             //Same File
-            if (i == j) break;
+            if (i == j) {
+                continue;
+            }
             let fileB = TokensOfFiles[j];
             console.log(`Comparing File ${chalk.red(fileA.name)} and ${chalk.blue(fileB.name)}`);
             let commonSequence = lcsbase.lcsOptimised(fileA.tokens, fileB.tokens);
