@@ -7,8 +7,8 @@ const https = require('https');
 const utility = require('./src/utility');
 const tempDir = '.lexerJSTemp';
 
-const ownerName = process.argv[2] ? process.argv[2] : 'nodejs';
-const repoName = process.argv[3] ? process.argv[3] : 'node';
+const ownerName = process.argv[2] ? process.argv[2] : 'prettier';
+const repoName = process.argv[3] ? process.argv[3] : 'prettier';
 const fileList = [];
 
 // GitHub's endpoint:
@@ -30,51 +30,60 @@ let options = {
 
 let usableFiles = [];
 
-https.get(options, (res) => {
+// https.get(options, (res) => {
 
-    let error;
+//     let error;
 
-    if (res.statusCode !== 200) {
-        error = new Error('Request Failed.\n' +
-            `Status Code: ${res.statusCode}`);
-    }
+//     if (res.statusCode !== 200) {
+//         error = new Error('Request Failed.\n' +
+//             `Status Code: ${res.statusCode}`);
+//     }
 
-    if (error) {
-        console.error(error.message);
-        res.resume();
-        return;
-    }
+//     if (error) {
+//         console.error(error.message);
+//         res.resume();
+//         return;
+//     }
 
-    let data = "";
-    res.on("data", (chunk => { data += chunk; }));
-    res.on("end", () => {
+//     let data = "";
+//     res.on("data", (chunk => {
+//         data += chunk;
+//     }));
+//     res.on("end", () => {
+//         console.log("ENDS");
+//         selectJSFiles(data);
+//         console.log(fileList);
+//         async.detectLimit(fileList, 10, (file, callback) => {
+//             checkCommitLength(file, callback);
+//         }, (err, results) => {
+//             console.log(results);
+//         });
+//         // downloadFile(fileName);
+//     });
+// });
 
-        selectJSFiles(data);
-        console.log(fileList);
-        async.detectLimit(fileList, 10, (file, callback) => {
-            checkCommitLength(file, callback);
-        }, (err, results) => {
-            console.log(results);
-        });
-        // downloadFile(fileName);
-    });
-});
+let data = JSON.parse(fs.readFileSync("githubResults.json").toString());
+l("File read");
 
-function selectUsableFile(data, file) {
-    if (commitLength > 50) {
-        usableFiles.push(file);
-    }
-}
+selectJSFiles(data);
+
+// async.detectLimit(fileList, 10, (file, callback) => {
+//     checkCommitLength(file, callback);
+// }, (err, results) => {
+//     fs.writeFileSync("repoResults.json", JSON.stringify(results));
+// });
 
 function selectJSFiles(data) {
 
-    const tree = JSON.parse(data).tree;
+    // const tree = JSON.parse(data).tree;
+    const tree = data.tree;
 
     tree.forEach((element) => {
         let path = element.path;
         if (path.endsWith(".js") &&
             !(path.includes("dist")
                 || path.includes("test")
+                || path.includes("bin")
                 || path.includes("build"))) {
 
             fileList.push(element.path);
@@ -84,49 +93,46 @@ function selectJSFiles(data) {
     return;
 }
 
-function selectRandomFile() {
-    const random = utility.randomValue(0, fileList.length);
-    return fileList[random];
-}
+// function selectRandomFile() {
+//     const random = utility.randomValue(0, fileList.length);
+//     return fileList[random];
+// }
 
-function checkCommitLength(fileName, callback) {
+// function checkCommitLength(fileName, callback) {
 
-    console.log(`Processing ${fileName}`);
-    // GitHub's endpoint:
-    // https://api.github.com/repos/abhisheksoni27/codespell/commits?path=README.md
-    // URL: https://api.github.com/repos/:owner/:repo/commits?path=:path
+//     console.log(`Processing ${fileName}`);
+//     // GitHub's endpoint:
+//     // https://api.github.com/repos/abhisheksoni27/codespell/commits?path=README.md
+//     // URL: https://api.github.com/repos/:owner/:repo/commits?path=:path
 
-    const path = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${fileName}`;
-    const iOpts = Object.assign({}, options, {
-        path: path
-    });
+//     const path = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${fileName}`;
 
-    https.get(iOpts, (res) => {
+//     const iOpts = Object.assign({}, options, {
+//         path: path
+//     });
 
-        if (res.statusCode !== 200) throw new Error(res.error);
+//     https.get(iOpts, (res) => {
 
-        let data = "";
-        res.on("data", (chunk => { data += chunk; }));
-        res.on("end", () => {
-            const commitLength = JSON.parse(data).length;
-            if (commitLength >= 20) {
-                callback(null, true)
-            } else {
-                console.log(commitLength);
-                callback(null, false);
-            }
-        });
+//         if (res.statusCode !== 200) throw new Error(res.error);
 
-    });
-}
+//         let data = "";
+//         res.on("data", (chunk => {
+//             data += chunk;
+//         }));
+//         res.on("end", () => {
+//             const commitLength = JSON.parse(data).length;
+//             if (commitLength >= 20) {
+//                 console.log(commitLength);
+//                 callback(null, true)
+//             } else {
+//                 console.log(commitLength);
+//                 callback(null, false);
+//             }
+//         });
+
+//     });
+// }
 
 function downloadFile(fileName) {
     // Download File
 }
-
-// process.chdir(cwd);
-// fs.writeFileSync('g-examples.json', JSON.stringify({ files: files.splice(0) }));
-
-// const lx = spawn('lexerJS', ['g-examples.json', /*'-s'*/]);
-
-// lx.stdout.pipe(process.stdou
