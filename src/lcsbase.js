@@ -3,6 +3,7 @@
  * Finds the longest common substring between two sequences (Array or String)
  */
 
+const utility = require('./utility');
 function lcs(seqA, seqB) {
     let longestCommonSequences = [];
 
@@ -52,7 +53,7 @@ function lcs(seqA, seqB) {
 }
 
 function lcsOptimised(seqA, seqB) {
-    let longestCommonSubstring = new Set();
+    let longestCommonSubstring = new Map();
     let maxLength = 0;
     for (let i = 0; i < seqA.length; ++i) {
 
@@ -71,22 +72,23 @@ function lcsOptimised(seqA, seqB) {
                 }
 
                 let testLength = str.length;
+                longestCommonSubstring.set(str.join(""), str);
 
-                if (longestCommonSubstring.size == 1) {
-                }
-                
-                if (testLength > maxLength) {
-                    maxLength = testLength;
-                    longestCommonSubstring.clear();
-                    longestCommonSubstring.add(str);
-                }
-                else if (str.length == maxLength) {
-                    longestCommonSubstring.add(str);
-                }
+                // if (testLength > maxLength) {
+                //     maxLength = testLength;
+                //     // longestCommonSubstring.clear();
+                //     longestCommonSubstring.set(str.join(""), str);
+                // }
+                // else if (testLength === maxLength) {
+                //     let keys = [...longestCommonSubstring.keys()];
+                //     let joinedString = str.join("");
+                //     keys = keys.filter(key => key === joinedString);
+                //     if (keys.length === 0) longestCommonSubstring.set(str.join(""), str);
+                // }
             }
         }
     }
-    return [...longestCommonSubstring];
+    return [...longestCommonSubstring.values()];
 
 }
 

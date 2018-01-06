@@ -4,7 +4,8 @@
 
 const fs = require('fs');
 const tempDirName = '.lexerJStemp';
-const https = require('https')
+const https = require('https');
+const log = console.log;
 let options = {
     host: 'api.github.com',
     path: "",
@@ -17,21 +18,44 @@ let options = {
 };
 
 // Check if item exists in collection
-function checkIfExists(collection, target) {
-    let flag = false;
+function checkIfExists(collection, target, files) {
+    let foundLoc = 0;
     for (let i = 0; i < collection.length; i++) {
         let item = collection[i];
-        if (item.seq == target) return { exists: true, loc: i };
+        if (item.seq.join("") == target.join("")) {
+            // let locLength = item.loc.size;
+            // files.forEach(file => item.loc.add(file));
+
+            // if (locLength < item.loc.size) {
+            // new Location
+            // Increment
+            foundLoc = i;
+            return { exists: true, loc: foundLoc };
+            // }
+
+        }
     }
-    return { exists: false, loc: null };
+    return { exists: false, loc: foundLoc };
+}
+
+function setCount (item){
+    item.loc = [...item.loc];
+    item.count = item.loc.length;
 }
 
 function assignScore(sequences) {
+
+    sequences.forEach(setCount);
+
     sequences.forEach((item) => {
-        item.score = score(item); // for two decimal places 
+        item.score = score(item); // for two decimal places
     });
 
-    sequence = sequences.sort((seqA, seqB) => {
+    sequences = sequences.filter(seq => seq.score > 0);
+
+    sequences.forEach(seq => [...seq.loc]);
+
+    sequences = sequences.sort((seqA, seqB) => {
         return seqA.total < seqB.total;
     });
 
