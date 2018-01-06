@@ -1,1 +1,5 @@
-var sum = add(10 + 10);
+function add(a, b) {
+    return a + b;
+}
+
+sum = add (17 + 10);

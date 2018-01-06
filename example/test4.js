@@ -1,5 +1,1 @@
-function add(a, b) {
-    return a + b;
-}
-
-sum = add(17 + 17);
+var sum = add (17 + 10);
