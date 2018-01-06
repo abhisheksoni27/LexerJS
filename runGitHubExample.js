@@ -2,21 +2,23 @@ const fs = require('fs-extra')
 const process = require('process');
 const async = require('async');
 const spawn = require('child_process').spawn;
-const l = console.log;
 const https = require('https');
+
+const log = console.log;
 const utility = require('./src/utility');
 const tempDir = '.lexerJSTemp';
 
-const ownerName = process.argv[2] ? process.argv[2] : 'prettier';
-const repoName = process.argv[3] ? process.argv[3] : 'prettier';
+const ownerName = process.argv[2] ? process.argv[2] : 'abhisheksoni27';
+const repoName = process.argv[3] ? process.argv[3] : 'codespell';
 let fileList = [];
+let commits = [];
 
-// GitHub's endpoint:
+// GitHub's endpoint for getting contents of a repo:
 // URL: https://api.github.com/repos/:owner/:repo/git/trees/:branch?recursive=1
 
 const path = `https://api.github.com/repos/${ownerName}/${repoName}/git/trees/master?recursive=1`;
 
-// Get files list
+// Default Options
 let options = {
     host: 'api.github.com',
     path: "",
@@ -28,80 +30,81 @@ let options = {
     },
 };
 
-let commits = [];
+log("Getting File List");
+utility.requestPromise(path)
+    .then((data) => {
 
-// https.get(options, (res) => {
-
-//     let error;
-
-//     if (res.statusCode !== 200) {
-//         error = new Error('Request Failed.\n' +
-//             `Status Code: ${res.statusCode}`);
-//     }
-
-//     if (error) {
-//         console.error(error.message);
-//         res.resume();
-//         return;
-//     }
-
-//     let data = "";
-//     res.on("data", (chunk => {
-//         data += chunk;
-//     }));
-//     res.on("end", () => {
-//         console.log("ENDS");
-//         selectJSFiles(data);
-//         console.log(fileList);
-//         async.detectLimit(fileList, 10, (file, callback) => {
-//             checkCommitLength(file, callback);
-//         }, (err, results) => {
-//             console.log(results);
-//         });
-//         // downloadFile(fileName);
-//     });
-// });
-
-let data = "";
-
-fs.readFile("githubResults.json")
-    .then((res) => {
-
-        data = JSON.parse(res.toString());
-
+        log(`File list has been received. Processing,`);
         selectJSFiles(data);
 
-        fileList = fileList.filter(el => el.startsWith("index.js"));
+        log(`Total JS Files: ${fileList.length}`);
+
+        // This finds a file we can test. (based on maxCommits required)
+        // The processing terminates as soon a file is found
+
+        log("Checking commit length for each file.");
+        return new Promise((resolve, reject) => {
+            async.detectSeries(fileList, (file, callback) => {
+                checkCommitLength(file, callback);
+            }, (err, results) => {
+                if (err) reject();
+                fileList = [results];
+                log(`Processing done. File Selected: ${fileList}`)
+                resolve();
+            });
+        })
     })
     .then(() => {
-        return fs.stat(tempDir)
+        log(`Making directory: ${__dirname}'/'${tempDir}`);
+
+        return fs.stat(tempDir);
     })
     .catch((err) => {
         // Create it
+
         return fs.mkdir(tempDir)
     })
     .then(() => {
-        let file = fileList[0];
-        // const commitPath = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${file}`;
-        // return utility.requestPromise(commitPath, (d) => commits.push(d));
+        log('Directory made');
 
-        return fs.readFile('repoResults.json')
+        let file = fileList[0];
+
+        const commitPath = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${file}`;
+
+        log("Processing Commits");
+
+        return utility.requestPromise(commitPath);
     })
     .catch(err => console.log(err))
     .then((res) => {
         // Now we have all the commits
-        commits = JSON.parse(res);
+        let response = JSON.parse(res);
+        response.forEach((elem) => {
 
-        // async.each(commits, downloadFile, function (err) {
-        //     if (err) throw err;
-        // });
+            commits.push(elem.sha);
+        });
 
-        // let testFileList = utility.findJSFiles(tempDir + '/');
-        // return fs.writeFile('g-examples.json', JSON.stringify({ files: testFileList }));
+        log(`Commits processed. Total commits: ${commits.length}`);
+
+        return new Promise((resolve, reject) => {
+            async.each(commits, downloadFile, function (err) {
+                if (err) reject(err);
+            });
+
+            resolve();
+        });
     })
     .then(() => {
-        // Config file saved
+        let testFileList = utility.findJSFiles(tempDir + '/');
+
+        log(`Saving config file`);
+        // Save config file
+        return fs.writeFile('g-examples.json', JSON.stringify({ files: testFileList }));
+    })
+    .then(() => {
         const startTime = new Date();
+        log("Processing g-examples.json");
+
         const lexerJS = spawn('lexerJS', ['g-examples.json', '-s']);
 
         lexerJS.stderr.on("data", (data) => console.log(data.toString()))
@@ -115,54 +118,41 @@ fs.readFile("githubResults.json")
     .catch(err => console.log(err));
 
 
-// async.detectLimit(fileList, 10, (file, callback) => {
-//     checkCommitLength(file, callback);
-// }, (err, results) => {
-//     fs.writeFileSync("repoResults.json", JSON.stringify(results));
-// });
+function checkCommitLength(fileName, callback) {
 
+    // GitHub's endpoint for file contents:
+    // URL: https://api.github.com/repos/:owner/:repo/commits?path=:path
 
+    const path = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${fileName}`;
 
-// function checkCommitLength(fileName, callback) {
+    console.log(`Processing ${fileName}`);
 
-//     console.log(`Processing ${fileName}`);
-//     // GitHub's endpoint:
-//     // https://api.github.com/repos/abhisheksoni27/codespell/commits?path=README.md
-//     // URL: https://api.github.com/repos/:owner/:repo/commits?path=:path
+    const iOpts = Object.assign({}, options, {
+        path: path
+    });
 
-//     const path = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${fileName}`;
+    https.get(iOpts, (res) => {
 
-//     const iOpts = Object.assign({}, options, {
-//         path: path
-//     });
+        if (res.statusCode !== 200) throw new Error(res.error);
 
-//     https.get(iOpts, (res) => {
+        let data = "";
+        res.on("data", (chunk => {
+            data += chunk;
+        }));
+        res.on("end", () => {
+            const commitLength = JSON.parse(data).length;
+            if (commitLength >= 20) {
+                callback(null, true)
+            } else {
+                callback(null, false);
+            }
 
-//         if (res.statusCode !== 200) throw new Error(res.error);
-
-//         let data = "";
-//         res.on("data", (chunk => {
-//             data += chunk;
-//         }));
-//         res.on("end", () => {
-//             const commitLength = JSON.parse(data).length;
-//             if (commitLength >= 20) {
-//                 console.log(commitLength);
-//                 callback(null, true)
-//             } else {
-//                 console.log(commitLength);
-//                 callback(null, false);
-//             }
-//         });
-
-//     });
-// }
-
-
-// Check if directory exists
-
+        });
+    });
+}
 
 function downloadFile(sha) {
+    log(`Downloading file for commit hash: ${sha.slice(0, 7)}`);
 
     const path = `https://api.github.com/repos/${ownerName}/${repoName}/contents/${fileList[0]}?ref=${sha}`;
 
@@ -193,8 +183,7 @@ function downloadFile(sha) {
 
 function selectJSFiles(data) {
 
-    // const tree = JSON.parse(data).tree;
-    const tree = data.tree;
+    const tree = JSON.parse(data).tree;
 
     tree.forEach((element) => {
         let path = element.path;

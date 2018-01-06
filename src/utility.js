@@ -163,11 +163,12 @@ function getFileFromGithub(opts) {
 }
 
 
-function requestPromise(path, callback) {
+function requestPromise(path) {
 
     return new Promise((resolve, reject) => {
 
         if (!path) reject("Please provide a API path.");
+        
         const iOpts = Object.assign({}, options, {
             path: path
         });
@@ -182,14 +183,7 @@ function requestPromise(path, callback) {
             }));
 
             res.on("end", () => {
-                data = JSON.parse(data);
-
-                data.forEach((entry) => {
-                    callback(entry.sha);
-                });
-
-                resolve();
-
+                resolve(data);
             });
 
         });
