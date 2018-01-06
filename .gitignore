@@ -4,3 +4,4 @@ zips/*
 result.json
 result.csv
 .lexerJSTemp/*
+.vscode
