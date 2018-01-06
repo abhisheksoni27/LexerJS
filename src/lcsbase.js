@@ -72,19 +72,19 @@ function lcsOptimised(seqA, seqB) {
                 }
 
                 let testLength = str.length;
-                longestCommonSubstring.set(str.join(""), str);
+                // longestCommonSubstring.set(str.join(""), str);
 
-                // if (testLength > maxLength) {
-                //     maxLength = testLength;
-                //     // longestCommonSubstring.clear();
-                //     longestCommonSubstring.set(str.join(""), str);
-                // }
-                // else if (testLength === maxLength) {
-                //     let keys = [...longestCommonSubstring.keys()];
-                //     let joinedString = str.join("");
-                //     keys = keys.filter(key => key === joinedString);
-                //     if (keys.length === 0) longestCommonSubstring.set(str.join(""), str);
-                // }
+                if (testLength > maxLength) {
+                    maxLength = testLength;
+                    longestCommonSubstring.clear();
+                    longestCommonSubstring.set(str.join(""), str);
+                }
+                else if (testLength === maxLength) {
+                    let keys = [...longestCommonSubstring.keys()];
+                    let joinedString = str.join("");
+                    keys = keys.filter(key => key === joinedString);
+                    if (keys.length === 0) longestCommonSubstring.set(str.join(""), str);
+                }
             }
         }
     }

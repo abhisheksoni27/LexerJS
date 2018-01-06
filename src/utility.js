@@ -52,7 +52,7 @@ function assignScore(sequences) {
     });
 
     sequences = sequences.filter(seq => seq.score > 0);
-
+    
     sequences.forEach(seq => [...seq.loc]);
 
     sequences = sequences.sort((seqA, seqB) => {
