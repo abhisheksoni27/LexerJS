@@ -107,10 +107,11 @@ function preProcessFiles() {
     }
 
     // Find tokens for each file
-    TokensOfFiles.forEach((file) => {
+    TokensOfFiles.forEach((file, i) => {
 
         try {
             let fileString = fs.readFileSync(file.name).toString();
+            console.log(`Processing ${chalk.red(file.name)}.js, File ${chalk.green(i + 1)} out of ${chalk.blue(TokensOfFiles.length)}`)
             file.tokens = tokenizer(fileString, false);
         } catch (ReadError) {
             console.log(ReadError);
@@ -150,28 +151,28 @@ function saveResult(resutlt) {
 }
 
 const result = run();
-console.log(result);
+saveResult(result);
+// console.log(result);
 
 
 // Display Results
-console.log('\x1Bc');
-let resultString = `${chalk.red('LexerJS')} - Results \n`;
+// // console.log('\x1Bc');
+// let resultString = `${chalk.red('LexerJS')} - Results \n`;
 
-result.forEach((el, i) => {
-    resultString += `Result ${chalk.cyan(`#${i + 1}`)}\n\n`;
-    el.loc.forEach((item) => {
-        resultString += `File ${chalk.blue(i + 1)}: ${item}\t`;
-    });
-    resultString += "\n";
-    resultString += `${chalk.yellow(result[i].seq)}\n\n`;
-})
+// result.forEach((el, i) => {
+//     resultString += `Result ${chalk.cyan(`#${i + 1}`)}\n\n`;
+//     el.loc.forEach((item) => {
+//         resultString += `File ${chalk.blue(i + 1)}: ${item}\t`;
+//     });
+//     resultString += "\n";
+//     resultString += `${chalk.yellow(result[i].seq)}\n\n`;
+// })
 
-if (result.length > 1) {
-    resultString += `${result.length} results found.\n`;
-} else {
-    resultString += `1 result found.\n`;
-}
+// if (result.length > 1) {
+//     resultString += `${result.length} results found.\n`;
+// } else {
+//     resultString += `1 result found.\n`;
+// }
 
 
-console.log(resultString);
-saveResult(result);
+// console.log(resultString);

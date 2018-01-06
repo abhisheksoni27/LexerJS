@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme",
   "dependencies": {
+    "async": "^2.6.0",
     "chalk": "^2.3.0",
+    "fs-extra": "^5.0.0",
     "meow": "^4.0.0",
     "terminal-paginator": "^2.0.2"
   },

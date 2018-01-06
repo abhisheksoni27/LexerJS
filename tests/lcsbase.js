@@ -16,7 +16,7 @@ describe('LexerJS - LCS Check', () => {
 
 describe('LexerJS - Opimised LCS Check', () => {
     it('should work with array sequences', () => {
-        expect(lcs.lcsOptimised(["const", "a", "=", "11", "+", "33", ";"], ["const", "b", "=", "11", "+", "33", ";"])[0]).equal("=11+33;");
+        expect(lcs.lcsOptimised(["const", "a", "=", "11", "+", "33", ";"], ["const", "b", "=", "11", "+", "33", ";"])[0].join("")).equal("=11+33;");
     });
 
     it('should work with strings', () => {
