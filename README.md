@@ -2,7 +2,7 @@
 
 A lexical analyzer and longest common shared sequence finder between a list of JS files.
 
-[![Build Status](https://travis-ci.com/abhisheksoni27/lexer.js.svg?token=cwN7xqik6Nx9bbtysewG&branch=master)](https://travis-ci.com/abhisheksoni27/lexer.js)
+[![Build Status](https://travis-ci.org/abhisheksoni27/lexer.js.svg?branch=master)](https://travis-ci.org/abhisheksoni27/lexer.js)
 
 # Table of Contents
 
