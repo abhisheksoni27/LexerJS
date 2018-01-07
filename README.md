@@ -52,10 +52,11 @@ function add(a, b){
 ```
 
 As you can see below, that's what this program finds.
+<img alt = "Test file 1" align="center" src="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png">
 
-![Test file 1](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png)
-![Test file 2](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png)
-![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png)
+<img alt = "Test file 2" align="center" src="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png">
+
+<img alt = "Results" align="center" src="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png">
 
 # Installation
 
