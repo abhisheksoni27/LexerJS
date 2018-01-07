@@ -16,6 +16,7 @@ A lexical analyzer and longest common shared sequence finder between a list of J
 * [Running Examples](#running-examples)
     - [Test Github Project](#test-github-project)
 * [Tests](#tests)
+* [Known Issues](https://github.com/abhisheksoni27/lexer.js/wiki/Known-Issues)
 
 # What it does
 
