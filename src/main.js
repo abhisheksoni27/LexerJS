@@ -14,11 +14,8 @@ const defaultOptions = {
 
 function LCSFinder(files, options) {
     const TokensOfFiles = [];
-    
-    options = {
-        ...defaultOptions,
-        ...options
-    };
+
+    options = Object.assign({}, defaultOptions, options);
 
     files.forEach(file => {
         TokensOfFiles.push({
