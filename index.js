@@ -10,7 +10,7 @@ const chalk = require('chalk');
 const meow = require('meow');
 const usageString = `
 Usage
-$ lexerJS <Input: CSV or JSON file> [options]
+$ lexer.js <Input: CSV or JSON file> [options]
 
 Options
 --saveTokens, -s  Save found tokens in a JSON file

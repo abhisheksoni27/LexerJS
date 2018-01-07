@@ -1,7 +1,7 @@
 const expect = require('expect.js');
 const lcs = require("../src/lcsbase");
 
-describe('LexerJS - LCS Check', () => {
+describe('lexer.js - LCS Check', () => {
     it('should work with array sequences', () => {
         expect(lcs.lcs(["const", "a", "=", "11", "+", "33", ";"], ["const", "b", "=", "11", "+", "33", ";"])[0].join("")).equal("=11+33;");
     });
@@ -14,7 +14,7 @@ describe('LexerJS - LCS Check', () => {
 
 })
 
-describe('LexerJS - Opimised LCS Check', () => {
+describe('lexer.js - Opimised LCS Check', () => {
     it('should work with array sequences', () => {
         expect(lcs.lcsOptimised(["const", "a", "=", "11", "+", "33", ";"], ["const", "b", "=", "11", "+", "33", ";"])[0].join("")).equal("=11+33;");
     });

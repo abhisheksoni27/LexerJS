@@ -1,14 +1,14 @@
-# LexerJS
+# lexer.js
 
 A lexical analyzer and longest common shared sequence finder between a list of JS files.
 
-[![Build Status](https://travis-ci.com/abhisheksoni27/LexerJS.svg?token=cwN7xqik6Nx9bbtysewG&branch=master)](https://travis-ci.com/abhisheksoni27/LexerJS)
+[![Build Status](https://travis-ci.com/abhisheksoni27/lexer.js.svg?token=cwN7xqik6Nx9bbtysewG&branch=master)](https://travis-ci.com/abhisheksoni27/lexer.js)
 
 # Table of Contents
 
 * [What It Does](#what-it-does)
 * [Installation](#installation)
-* [Running lexerJS](#running-lexerjs)
+* [Running lexer.js](#running-lexer.js)
     - [JSON configruation](#json-configuration)
     - [CSV configruation](#csv-configuration)
 * [Result](#result)
@@ -23,7 +23,7 @@ Suppose, you have two files with the same function but different function calls:
 
 **`test1.js`**
 
-<img alt="Test File 1" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png">
+<img alt="Test File 1" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/lexer.js/master/src/assets/test1.png">
 
 ```js
 function add(a, b){
@@ -35,7 +35,7 @@ const sum = add(11 + 11);
 
 **`test2.js`**
 
-<img alt="Test File 2" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png">
+<img alt="Test File 2" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/lexer.js/master/src/assets/test2.png">
 
 ```js
 function add(a, b){
@@ -56,30 +56,30 @@ function add(a, b){
 }
 ```
 
-![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png)
+![Results](https://raw.githubusercontent.com/abhisheksoni27/lexer.js/master/src/assets/result.png)
 
 # Installation
 
 You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from [nodejs.org](https://nodejs.org) for your OS.)
 
 ```bash
-$ npm i -g lexerJS
+$ npm i -g lexer.js
 ```
 
 Or, if you prefer ***yarn***
 
 ```bash
-$ yarn global add lexerJS
+$ yarn global add lexer.js
 ```
 
 That's it. 🎉
 
-# Running lexerJS
+# Running lexer.js
 
 To run it on your own set of files, you can either provide the files in CSV/JSON, or as command line arguments like this:
 
 ```bash
-lexerJS test1.js test2.js
+lexer.js test1.js test2.js
 ```
 
 ### JSON configuration
@@ -122,10 +122,10 @@ score = log2(count) * log2(total)
 
 #### **`-o`** `[default: json]`
 
-lexerJS supports **JSON** as well as **CSV** output. JSON is the defualt output format if you do not specify any during invocation.
+lexer.js supports **JSON** as well as **CSV** output. JSON is the defualt output format if you do not specify any during invocation.
 
 ```bash
-lexerJS test.json -o csv
+lexer.js test.json -o csv
 ```
 > Output would now be a `CSV` file. To know what that file would contain, check out [result](#result).
 
@@ -134,14 +134,14 @@ lexerJS test.json -o csv
 This is a boolean option, which when set, saves the tokens for each test file.
 
 ```bash
-lexerJS test.json -s
+lexer.js test.json -s
 ```
 
 > It will generate a tokens folder, and save individual `tokens` for each file in that directory.
 
 # Running Examples
 
-The [examples](https://) directory contains a minimal example set that you can run lexerJS on. To do so, clone the repo, fire a terminal, and run:
+The [examples](https://) directory contains a minimal example set that you can run lexer.js on. To do so, clone the repo, fire a terminal, and run:
 
 ```bash
 npm install
@@ -150,10 +150,10 @@ npm install
 This will downdload the dependencies. Then, run:
 
 ```bash
-lexerJS test.json
+lexer.js test.json
 ```
 
-This assumes that you already have lexerJS installed. If you don't, you can directly invoke the node script as follows:
+This assumes that you already have lexer.js installed. If you don't, you can directly invoke the node script as follows:
 
 ```bash
 node index.js test.json
@@ -163,13 +163,13 @@ As always, you must have `node` installed.
 
 ## Test GitHub project
 
-The repo also contains a script to test lexerJS on any GitHub project. The script does the following:
+The repo also contains a script to test lexer.js on any GitHub project. The script does the following:
 
 1. Find all JS files in a project.
 2. Select a file which has more than **n** commits. n is configurable.
 3. Downloads the file at that point in time (when that commit was made).
-4. Generates a configuration file for lexerJS.
-5. Run lexerJS with that config file.
+4. Generates a configuration file for lexer.js.
+5. Run lexer.js with that config file.
 
 To run it, fire a terminal and run (assuming you are inside the project directory):
 
@@ -183,7 +183,7 @@ node runGitHubExamples.js --owner OWNERNAME --repo REPONAME -n 20
 
 **`n`**: Minimum commits the selected file must have `[default: 10]`
 
-The results are saved in `result.json`. The command line [options](#options) for **lexerJS** can also be passed.
+The results are saved in `result.json`. The command line [options](#options) for **lexer.js** can also be passed.
 
 # Tests
 

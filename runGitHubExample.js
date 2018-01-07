@@ -47,7 +47,7 @@ const cli = meow(usageString, {
     },
     autoHelp: true,
     autoVersion: true,
-    description: chalk.cyan("Run lexerJS on a GitHub project")
+    description: chalk.cyan("Run lexer.js on a GitHub project")
 });
 
 const ownerName = cli.flags.owner;

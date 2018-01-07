@@ -1,5 +1,5 @@
 {
-  "name": "lexerJS",
+  "name": "lexer.js",
   "version": "0.2.0",
   "description": "A lexer and longest common sequence finder (between source code files)",
   "main": "index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abhisheksoni27/LexerJS.git"
+    "url": "git+https://github.com/abhisheksoni27/lexer.js.git"
   },
   "keywords": [
     "Lexer",
@@ -22,9 +22,9 @@
   "author": "Abhishek Soni",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/abhisheksoni27/LexerJS/issues"
+    "url": "https://github.com/abhisheksoni27/lexer.js/issues"
   },
-  "homepage": "https://github.com/abhisheksoni27/LexerJS#readme",
+  "homepage": "https://github.com/abhisheksoni27/lexer.js#readme",
   "dependencies": {
     "async": "^2.6.0",
     "chalk": "^2.3.0",

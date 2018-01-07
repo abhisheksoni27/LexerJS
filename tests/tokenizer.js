@@ -1,7 +1,7 @@
 const expect = require('expect.js');
 const tokenizer = require('../src/tokenizer.js');
 
-describe('LexerJS - Tokenizer Check', () => {
+describe('lexer.js - Tokenizer Check', () => {
     it('should find all tokens', () => {
         expect(tokenizer("const a += c;").length).equal(5);
         expect(tokenizer("for int i = 0;").length).equal(6);

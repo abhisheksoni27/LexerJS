@@ -85,6 +85,6 @@
 // // const LexerJS = new Lexer(fileList, {saveTokens:true});
 
 
-// console.log(LexerJS.longestCommonSequences())
-// describe('LexerJS - Tokenizer Check', () => {
+// console.log(lexer.js.longestCommonSequences())
+// describe('lexer.js - Tokenizer Check', () => {
 // })
