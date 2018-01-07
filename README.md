@@ -11,6 +11,7 @@ A lexical analyzer and longest common shared sequence finder between a list of J
 * [Running lexerJS](#running-lexerjs)
     - [JSON configruation](#json-configuration)
     - [CSV configruation](#csv-configuration)
+* [Result](#result)
 * [Options](#options)
 * [Running Examples](#running-examples)
     - [Test-Github-Project](#test-github-project)
@@ -104,6 +105,20 @@ filename,
 ./example/test2.js
 ```
 
+# Result
+
+The result contains the **longest common `shared` sequence** found between the set of files. The default format is JSON, but can be configured. (See options below.)
+
+It also asssigns a score to each subsequnce using the following formula:
+
+```js
+score = log2(count) * log2(total)
+```
+
+**count**: Total number of occurences of the subsequence
+
+**total**: Total number of tokens in the subsequence
+
 ## Options
 
 #### **`-o`** `[default: json]`
@@ -163,11 +178,11 @@ To run it, fire a terminal and run (assuming you are inside the project director
 node runGitHubExamples.js --owner OWNERNAME --repo REPONAME -n 20
 ```
 
-`OWNERNAME`: Owner of the repo [default: prettier]
+**`OWNERNAME`**: Owner of the repo `[default: prettier]`
 
-`REPONAME`: Name of the repo [default: prettier]
+**`REPONAME`**: Name of the repo `[default: prettier]`
 
-`n`: Minimum commits the selected file must have [default: 10]
+**`n`**: Minimum commits the selected file must have `[default: 10]`
 
 The results are saved in `result.json`. The command line [options](#options) for **lexerJS** can also be passed.
 
