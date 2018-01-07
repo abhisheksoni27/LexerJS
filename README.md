@@ -48,7 +48,7 @@ As you can see below, that's what this program finds.
 
 # Installation
 
-You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from ![nodejs.org](nodejs.org) for your OS.)
+You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from [nodejs.org](https://nodejs.org) for your OS.)
 
 ```bash
 $ npm i -g lexerJS
@@ -71,7 +71,7 @@ lexerJS test1.js test2.js
 ```
 
 ### JSON configuration
-The JSON must have a key named `files` and it's value should be an array of the *paths* of files you want to test on.
+The **JSON** must have a key named `files` and it's value should be an array of the *paths* of files you want to test on.
 
 ```json
 {
@@ -113,5 +113,54 @@ lexerJS test.json -s
 
 > It will generate a tokens folder, and save individual tokens for each file in that directory.
 
-# Test GitHub project
+# Running Examples
 
+The [examples](https://) directory contains a minimal example set that you can run lexerJS on. To do so, clone the repo, fire a terminal, and run:
+
+```bash
+npm install
+```
+
+This will downdload the dependencies. Then, run:
+
+```bash
+lexerJS test.json
+```
+
+This assumes that you already have lexerJS installed. If you don't, you can directly invoke the node script as follows:
+
+```bash
+node index.js test.json
+```
+
+As always, you must have `node` installed.
+
+## Test GitHub project
+
+The repo also contains a script to test lexerJS on any GitHub project. The script does the following:
+
+1. Find all JS files in a project.
+2. Select a file which has more than **n** commits. n is configurable.
+3. Downloads the file at that point in time (when that commit was made).
+4. Generates a configuration file for lexerJS.
+5. Run lexerJS with that config file.
+
+To run it, fire a terminal and run (assuming you are inside the project directory):
+
+```bash
+node runGitHubExamples.js --owner OWNERNAME --repo REPONAME
+```
+
+where `OWNERNAME` and `REPONAME` have their usual meanings respectively.
+
+If you do not supply those arguments, [prettier.js](https://github.com/prettier/prettier) is selected automatically and **lexerJS** is run on it.
+
+# Testing
+
+To run tests, clone the repo (That green button above the repo contents) and run the following command:
+
+```bash
+npm install && npm run test
+```
+
+This will first download the dependencies, and then run the tests (using `mocha`) and output the result.
