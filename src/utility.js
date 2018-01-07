@@ -38,7 +38,7 @@ function checkIfExists(collection, target, files) {
     return { exists: false, loc: foundLoc };
 }
 
-function setCount (item){
+function setCount(item) {
     item.loc = [...item.loc];
     item.count = item.loc.length;
 }
@@ -52,7 +52,7 @@ function assignScore(sequences) {
     });
 
     sequences = sequences.filter(seq => seq.score > 0);
-    
+
     sequences.forEach(seq => [...seq.loc]);
 
     sequences = sequences.sort((seqA, seqB) => {
@@ -168,7 +168,7 @@ function requestPromise(path) {
     return new Promise((resolve, reject) => {
 
         if (!path) reject("Please provide a API path.");
-        
+
         const iOpts = Object.assign({}, options, {
             path: path
         });
@@ -190,6 +190,18 @@ function requestPromise(path) {
     });
 }
 
+/**
+ * A function to shuffle an array
+ * Credits for the optimised version: https://stackoverflow.com/a/12646864/2231031
+ */
+function shuffle(collection) {
+    for (let i = collection.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [collection[i], collection[j]] = [collection[j], collection[i]];
+    }
+    return collection;
+}
+
 module.exports = {
     score,
     assignScore,
@@ -199,5 +211,6 @@ module.exports = {
     findJSFiles,
     randomValue,
     getFileFromGithub,
-    requestPromise
+    requestPromise,
+    shuffle
 }

@@ -1,1 +1,1 @@
-var sum = add (17 + 10);
+var sum = add (10 + 20);

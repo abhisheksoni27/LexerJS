@@ -1,15 +1,60 @@
-const fs = require('fs-extra')
-const process = require('process');
-const async = require('async');
-const spawn = require('child_process').spawn;
-const https = require('https');
+const fs = require("fs-extra")
+const process = require("process");
+const async = require("async");
+const spawn = require("child_process").spawn;
+const https = require("https");
+
+const utility = require("./src/utility");
+
+const chalk = require('chalk');
+const meow = require("meow");
+const usageString = `
+${chalk.yellow("Usage")};
+$ node runGitHubExample.js [options]
+
+Options
+${chalk.red("--owner")},  Owner of the repo (default: prettier)
+${chalk.red("--repo")},  Name of the repo (default: prettier)
+${chalk.red("--min-commit")}, -n Minimum commits the selected file must have (default: 10)
+`;
+
+const cli = meow(usageString, {
+    flags: {
+        owner: {
+            type: "string",
+            default: "prettier"
+        },
+        repo: {
+            type: "string",
+            default: "prettier"
+        },
+        "min-commit": {
+            type: "string",
+            alias: "n",
+            default: 10
+        },
+        token: {
+            type: "string",
+            alias: "t"
+        },
+        help: {
+            alias: 'h'
+        },
+        version: {
+            alias: 'v'
+        }
+    },
+    autoHelp: true,
+    autoVersion: true,
+    description: chalk.cyan("Run lexerJS on a GitHub project")
+});
+
+const ownerName = cli.flags.owner;
+const repoName = cli.flags.repo;
+const minCommits = cli.flags.n;
 
 const log = console.log;
-const utility = require('./src/utility');
-const tempDir = '.lexerJSTemp';
-
-const ownerName = process.argv[2] ? process.argv[2] : 'abhisheksoni27';
-const repoName = process.argv[3] ? process.argv[3] : 'codespell';
+const tempDir = ".lexerJSTemp";
 let fileList = [];
 let commits = [];
 
@@ -20,13 +65,13 @@ const path = `https://api.github.com/repos/${ownerName}/${repoName}/git/trees/ma
 
 // Default Options
 let options = {
-    host: 'api.github.com',
+    host: "api.github.com",
     path: "",
-    method: 'GET',
+    method: "GET",
     headers: {
         Accept: "application/vnd.github.v3.json",
-        Authorization: "token 07bebe6910646cac6448df4ed1faf13ca2d6b49c",
-        'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
+        Authorization: `token ${cli.flags.token}`,
+        "user-agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)",
     },
 };
 
@@ -38,7 +83,9 @@ utility.requestPromise(path)
         selectJSFiles(data);
 
         log(`Total JS Files: ${fileList.length}`);
-
+        
+        // Shuffle the file list so that differnt (and random) files are selected on every run.
+        fileList = utility.shuffle(fileList);
         // This finds a file we can test. (based on maxCommits required)
         // The processing terminates as soon a file is found
 
@@ -65,7 +112,7 @@ utility.requestPromise(path)
         return fs.mkdir(tempDir)
     })
     .then(() => {
-        log('Directory made');
+        log("Directory made");
 
         let file = fileList[0];
 
@@ -95,17 +142,17 @@ utility.requestPromise(path)
         });
     })
     .then(() => {
-        let testFileList = utility.findJSFiles(tempDir + '/');
+        let testFileList = utility.findJSFiles(tempDir + "/");
 
         log(`Saving config file`);
         // Save config file
-        return fs.writeFile('g-examples.json', JSON.stringify({ files: testFileList }));
+        return fs.writeFile("g-examples.json", JSON.stringify({ files: testFileList }));
     })
     .then(() => {
         const startTime = new Date();
         log("Processing g-examples.json");
 
-        const lexerJS = spawn('lexerJS', ['g-examples.json', '-s']);
+        const lexerJS = spawn("lexerJS", ["g-examples.json", "-s"]);
 
         lexerJS.stderr.on("data", (data) => console.log(data.toString()))
         lexerJS.stdout.on("data", (data) => console.log(data.toString()))
@@ -141,7 +188,7 @@ function checkCommitLength(fileName, callback) {
         }));
         res.on("end", () => {
             const commitLength = JSON.parse(data).length;
-            if (commitLength >= 20) {
+            if (commitLength >= minCommits) {
                 callback(null, true)
             } else {
                 callback(null, false);

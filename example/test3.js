@@ -2,4 +2,4 @@ function add(a, b) {
     return a + b;
 }
 
-sum = add (17 + 10);
+sum = add (10 + 20);

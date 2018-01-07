@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha tests",
     "github-examples": "node runGitHubExample.js",
-    "clean":"rm -rf tokens result.json g-examples.json"
+    "clean": "rm -rf tokens result.json g-examples.json"
   },
   "repository": {
     "type": "git",
@@ -29,8 +29,7 @@
     "async": "^2.6.0",
     "chalk": "^2.3.0",
     "fs-extra": "^5.0.0",
-    "meow": "^4.0.0",
-    "terminal-paginator": "^2.0.2"
+    "meow": "^4.0.0"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
