@@ -1,6 +1,6 @@
 {
   "name": "lexerJS",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A lexer and longest common sequence finder (between source code files)",
   "main": "index.js",
   "scripts": {
