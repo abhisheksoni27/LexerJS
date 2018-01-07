@@ -1,28 +1,30 @@
 {
   "name": "lexerJS",
   "version": "0.0.1",
-  "description": "A simple Lexer built with JavaScript",
+  "description": "A lexer and longest common sequence finder (between source code files)",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha tests",
-    "github-examples": "node runGitHubExample.js"
+    "github-examples": "node runGitHubExample.js",
+    "clean":"rm -rf tokens result.json g-examples.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abhisheksoni27/LexerUofAlberta.git"
+    "url": "git+https://github.com/abhisheksoni27/LexerJS.git"
   },
   "keywords": [
     "Lexer",
     "Lexical",
-    "Analysis"
+    "Analysis",
+    "Longest common substring"
   ],
   "bin": "index.js",
   "author": "Abhishek Soni",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/abhisheksoni27/LexerUofAlberta/issues"
+    "url": "https://github.com/abhisheksoni27/LexerJS/issues"
   },
-  "homepage": "https://github.com/abhisheksoni27/LexerUofAlberta#readme",
+  "homepage": "https://github.com/abhisheksoni27/LexerJS#readme",
   "dependencies": {
     "async": "^2.6.0",
     "chalk": "^2.3.0",
