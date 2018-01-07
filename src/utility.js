@@ -156,6 +156,16 @@ function requestPromise(path, token, extraOptions) {
     });
 }
 
+// Save Result
+function saveResult(result, ext) {
+    const name = 'result';
+    const saveStatus = (ext === "csv")
+        ? saveCSV(result, name)
+        : saveJSON(result, name)
+
+    if (saveStatus) console.log(`Results successfully saved at ${__dirname}/${name}.${ext}`);
+}
+
 /**
  * A function to shuffle an array
  * Credits for the optimised version: https://stackoverflow.com/a/12646864/2231031
@@ -177,5 +187,6 @@ module.exports = {
     findJSFiles,
     randomValue,
     requestPromise,
+    saveResult,
     shuffle
 }

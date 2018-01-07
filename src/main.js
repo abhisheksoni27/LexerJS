@@ -40,18 +40,8 @@ function LCSFinder(files, options) {
     });
 
     const result = LCS(TokensOfFiles);
-    saveResult(result, options.output);
+    return result;
 
-}
-
-// Save Result
-function saveResult(result, ext) {
-    const name = 'result';
-    const saveStatus = (ext === "csv")
-        ? utility.saveCSV(result, name)
-        : utility.saveJSON(result, name)
-
-    if (saveStatus) console.log(`Results successfully saved at ${__dirname}/${name}.${ext}`);
 }
 
 module.exports = LCSFinder;

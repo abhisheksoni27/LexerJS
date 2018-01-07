@@ -60,6 +60,7 @@ function add(a, b){
 
 # Installation
 
+### CLI
 You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from [nodejs.org](https://nodejs.org) for your OS.)
 
 ```bash
@@ -73,6 +74,20 @@ $ yarn global add lexer.js
 ```
 
 That's it. 🎉
+
+### As module
+
+In your application:
+
+```js
+const lexerJS = require('lexer.js');
+
+const result = lexerJS(files, options);
+```
+
+`files`: An array of files.
+
+`options`: See [options](#options) This parameter is *(ironically)* optional.
 
 # Running lexer.js
 
@@ -120,7 +135,7 @@ score = log2(count) * log2(total)
 
 ## Options
 
-#### **`-o`** `[default: json]`
+#### **`-o`** Output Mode `[default: "json"]`
 
 lexer.js supports **JSON** as well as **CSV** output. JSON is the defualt output format if you do not specify any during invocation.
 
@@ -129,7 +144,7 @@ lexer.js test.json -o csv
 ```
 > Output would now be a `CSV` file. To know what that file would contain, check out [result](#result).
 
-#### **`-s`** `[default: false]`
+#### **`-s`** Save Tokens `[default: false]`
 
 This is a boolean option, which when set, saves the tokens for each test file.
 
@@ -138,6 +153,12 @@ lexer.js test.json -s
 ```
 
 > It will generate a tokens folder, and save individual `tokens` for each file in that directory.
+
+#### **`-f`** Output File Name `[default: "result"]`
+
+```
+lexer.js test.json -f YayTheResultsYay
+```
 
 # Running Examples
 

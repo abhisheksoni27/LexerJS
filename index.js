@@ -106,4 +106,6 @@ if (cli.input.length > 1) {
     });
 }
 
-LCSfinder(fileList, cli.flags);
+let result = LCSfinder(fileList, cli.flags);
+
+utility.saveResult(result, cli.flags.output);
