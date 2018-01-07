@@ -4,6 +4,18 @@ A lexical analyzer and longest common shared sequence finder between a list of J
 
 [![Build Status](https://travis-ci.com/abhisheksoni27/LexerJS.svg?token=cwN7xqik6Nx9bbtysewG&branch=master)](https://travis-ci.com/abhisheksoni27/LexerJS)
 
+# Table of Contents
+
+* [What It Does](#what-it-does)
+* [Installation](#installation)
+* [Running lexerJS](#running-lexerjs)
+    - [JSON configruation](#json-configuration)
+    - [CSV configruation](#csv-configuration)
+* [Options](#options)
+* [Running Examples](#running-examples)
+    - [Test-Github-Project](#test-github-project)
+* [Tests](#tests)
+
 # What it does
 
 Suppose, you have two files with the same function but different function calls:
@@ -62,7 +74,7 @@ $ yarn global add lexerJS
 
 That's it. 🎉
 
-# Running
+# Running lexerJS
 
 To run it on your own set of files, you can either provide the files in CSV/JSON, or as command line arguments like this:
 
@@ -89,12 +101,12 @@ The **CSV** config file only has one header (or column) and is called `filename`
 ```csv
 filename,
 ./example/test1.js,
-./example/test2.js,
+./example/test2.js
 ```
 
 ## Options
 
-### **`-o`** `[default: json]`
+#### **`-o`** `[default: json]`
 
 lexerJS supports **JSON** as well as **CSV** output. JSON is the defualt output format if you do not specify any during invocation.
 
@@ -103,7 +115,7 @@ lexerJS test.json -o csv
 ```
 > Output would now be a `CSV` file. To know what that file would contain, check out [result](#result).
 
-### **`-s`** `[default: false]`
+#### **`-s`** `[default: false]`
 
 This is a boolean option, which when set, saves the tokens for each test file.
 
@@ -111,7 +123,7 @@ This is a boolean option, which when set, saves the tokens for each test file.
 lexerJS test.json -s
 ```
 
-> It will generate a tokens folder, and save individual tokens for each file in that directory.
+> It will generate a tokens folder, and save individual `tokens` for each file in that directory.
 
 # Running Examples
 
@@ -155,7 +167,7 @@ where `OWNERNAME` and `REPONAME` have their usual meanings respectively.
 
 If you do not supply those arguments, [prettier.js](https://github.com/prettier/prettier) is selected automatically and **lexerJS** is run on it.
 
-# Testing
+# Tests
 
 To run tests, clone the repo (That green button above the repo contents) and run the following command:
 
