@@ -1,11 +1,10 @@
 {
   "name": "lexer.js",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A lexer and longest common sequence finder (between source code files)",
   "main": "./src/main.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha tests",
-    "prepublishOnly": "npm test",
     "github-examples": "node runGitHubExample.js",
     "clean": "rm -rf tokens result.json .lexerJSTemp"
   },

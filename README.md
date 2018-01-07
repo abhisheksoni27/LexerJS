@@ -160,6 +160,8 @@ lexer.js test.json -s
 lexer.js test.json -f YayTheResultsYay
 ```
 
+***Note:*** If you provide a file name with extension, such as `art.json`, then the output mode will be determined from the fileName and the output mode flag ( if passed) will be overriden.
+
 # Running Examples
 
 The [examples](https://) directory contains a minimal example set that you can run lexer.js on. To do so, clone the repo, fire a terminal, and run:

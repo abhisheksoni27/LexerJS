@@ -108,4 +108,4 @@ if (cli.input.length > 1) {
 
 let result = LCSfinder(fileList, cli.flags);
 
-utility.saveResult(result, cli.flags.output);
+utility.saveResult(result, cli.flags["output-file"], cli.output.output);
