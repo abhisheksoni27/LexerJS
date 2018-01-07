@@ -50,13 +50,13 @@ The longest common shared sequence between these two files is the *entire functi
 **LCSS**
 
 
-<img alt="Results" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png">
-
 ```js
 function add(a, b){
     return a + b;
 }
 ```
+
+![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png)
 
 # Installation
 
