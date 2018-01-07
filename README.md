@@ -54,9 +54,7 @@ function add(a, b){
 As you can see below, that's what this program finds.
 
 ![Test file 1](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png)
-
 ![Test file 2](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png)
-
 ![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/results.png)
 
 # Installation
