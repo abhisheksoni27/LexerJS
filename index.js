@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const LCSfinder = require('./src/longestCommonSequences');
-const fs = require('fs') // For reading files
+const fs = require('fs-extra') // For reading files
 const path = require('path');
 
 const utility = require('./src/utility')
@@ -36,6 +36,7 @@ const cli = meow(usageString, {
     }
 });
 
+
 // To show help when -h, or --help is passed
 if (cli.flags.h) cli.showHelp([code = 0]);
 
@@ -43,15 +44,10 @@ if (cli.flags.h) cli.showHelp([code = 0]);
 if (cli.flags.v) cli.showVersion();
 
 const saveTokens = cli.flags.s;
+
+const tokenDir = process.cwd() + path.sep + "tokens";
 if (saveTokens) {
-    const tokenDir = __dirname + path.sep + "tokens";
-    try {
-        if (!fs.statSync(tokenDir)) {
-            fs.mkdirSync(tokenDir);
-        }
-    } catch (IOError) {
-        fs.mkdirSync(tokenDir);
-    }
+    fs.stat(tokenDir).catch((err) => { fs.mkdir(tokenDir) });
 }
 
 /**
@@ -114,17 +110,13 @@ function preProcessFiles() {
             console.log(`Processing ${chalk.red(file.name)}.js, File ${chalk.green(i + 1)} out of ${chalk.blue(TokensOfFiles.length)}`)
             file.tokens = tokenizer(fileString, false);
         } catch (ReadError) {
-            console.log(ReadError);
+            // console.log(ReadError);
             process.exit(1);
         }
 
         if (saveTokens) {
-            try {
-                fs.writeFileSync(`tokens/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens));
-            } catch (e) {
-                console.error(e);
-                process.exit(0);
-            }
+            console.log(`${tokenDir}/${file.name.split('/').pop()}.json`)
+            fs.writeFile(`${tokenDir}/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens)).catch(err=>console.log();
         }
     });
 
@@ -152,27 +144,3 @@ function saveResult(resutlt) {
 
 const result = run();
 saveResult(result);
-// console.log(result);
-
-
-// Display Results
-// // console.log('\x1Bc');
-// let resultString = `${chalk.red('LexerJS')} - Results \n`;
-
-// result.forEach((el, i) => {
-//     resultString += `Result ${chalk.cyan(`#${i + 1}`)}\n\n`;
-//     el.loc.forEach((item) => {
-//         resultString += `File ${chalk.blue(i + 1)}: ${item}\t`;
-//     });
-//     resultString += "\n";
-//     resultString += `${chalk.yellow(result[i].seq)}\n\n`;
-// })
-
-// if (result.length > 1) {
-//     resultString += `${result.length} results found.\n`;
-// } else {
-//     resultString += `1 result found.\n`;
-// }
-
-
-// console.log(resultString);

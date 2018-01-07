@@ -36,7 +36,7 @@ function longestCommonSequences(TokensOfFiles) {
                 } else if (!iFlag.loc) {
                     // Currently, if we have to reduce the second loop size 
                     // (and avoid redundant comparisons), we cannot set count to 2
-                    // as it leads to increasing the count.
+                    // as it leads to incrementing it for already matched sequences.
 
                     result.push({ seq: commonSequence[k], total: commonSequence[k].length, loc: new Set([fileB.name, fileA.name]) });
                 }
