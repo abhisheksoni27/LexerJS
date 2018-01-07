@@ -157,8 +157,15 @@ function requestPromise(path, token, extraOptions) {
 }
 
 // Save Result
-function saveResult(result, ext) {
-    const name = 'result';
+function saveResult(outputFileName, result, ext) {
+    const name = outputFileName;
+    const nameExt = name.split(".").pop();
+    
+    // To check if the user provided a barebone name, or with exetension
+    if (nameExt === "js" || nameExt === "csv") {
+        ext = nameExt;
+    }
+
     const saveStatus = (ext === "csv")
         ? saveCSV(result, name)
         : saveJSON(result, name)
