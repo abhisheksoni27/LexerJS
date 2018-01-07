@@ -3,10 +3,17 @@ const process = require("process");
 const async = require("async");
 const spawn = require("child_process").spawn;
 const https = require("https");
+const path = require('path');
 
+const LCSFinder = require('./src/main');
 const utility = require("./src/utility");
 
 const chalk = require('chalk');
+
+/**
+ *  CLI Setup
+ */
+
 const meow = require("meow");
 const usageString = `
 ${chalk.yellow("Usage")};
@@ -54,6 +61,13 @@ const ownerName = cli.flags.owner;
 const repoName = cli.flags.repo;
 const minCommits = cli.flags.n;
 const token = cli.flags.t;
+const saveTokens = cli.flags.s;
+const output = cli.flags.o;
+
+const tokenDir = path.join(process.cwd(), "tokens");
+if (saveTokens) {
+    fs.stat(tokenDir).catch((err) => { fs.mkdir(tokenDir) });
+}
 
 if (!token) {
     let error = new Error("Please supply an OAuth token for accessing GitHub's API");
@@ -68,7 +82,7 @@ let commits = [];
 // GitHub's endpoint for getting contents of a repo:
 // URL: https://api.github.com/repos/:owner/:repo/git/trees/:branch?recursive=1
 
-const path = `https://api.github.com/repos/${ownerName}/${repoName}/git/trees/master?recursive=1`;
+const gitHubPath = `https://api.github.com/repos/${ownerName}/${repoName}/git/trees/master?recursive=1`;
 
 // Default Options
 let options = {
@@ -82,8 +96,11 @@ let options = {
     },
 };
 
-log("Getting File List");
-utility.requestPromise(path, token)
+fs.emptyDir(tempDir)
+    .then(() => {
+        log("Getting File List");
+        return utility.requestPromise(gitHubPath, token)
+    })
     .then((data) => {
 
         log(`File list has been received. Processing,`);
@@ -91,8 +108,8 @@ utility.requestPromise(path, token)
 
         log(`Total JS Files: ${fileList.length}`);
 
-        // Shuffle the file list so that differnt (and random) files are selected on every run.
         fileList = utility.shuffle(fileList);
+        // Shuffle the file list so that differnt (and random) files are selected on every run.
         // This finds a file we can test. (based on maxCommits required)
         // The processing terminates as soon a file is found
 
@@ -109,17 +126,6 @@ utility.requestPromise(path, token)
         })
     })
     .then(() => {
-        log(`Making directory: ${__dirname}'/'${tempDir}`);
-
-        return fs.stat(tempDir);
-    })
-    .catch((err) => {
-        // Create it
-
-        return fs.mkdir(tempDir)
-    })
-    .then(() => {
-        log("Directory made");
 
         let file = fileList[0];
 
@@ -133,44 +139,30 @@ utility.requestPromise(path, token)
     .then((res) => {
         // Now we have all the commits
         let response = JSON.parse(res);
-        response.forEach((elem) => {
 
+        response.forEach((elem) => {
             commits.push(elem.sha);
         });
 
         log(`Commits processed. Total commits: ${commits.length}`);
 
         return new Promise((resolve, reject) => {
-            async.each(commits, downloadFile, function (err) {
-                if (err) reject(err);
+            async.every(commits, downloadFile, function (err, result) {
+                if (err) reject();
+                resolve();
             });
-
-            resolve();
-        });
-    })
-    .then(() => {
-        let testFileList = utility.findJSFiles(tempDir + "/");
-
-        log(`Saving config file`);
-        // Save config file
-        return fs.writeFile("g-examples.json", JSON.stringify({ files: testFileList }));
-    })
-    .then(() => {
-        const startTime = new Date();
-        log("Processing g-examples.json");
-
-        const lexerJS = spawn("lexerJS", ["g-examples.json", "-s"]);
-
-        lexerJS.stderr.on("data", (data) => console.log(data.toString()))
-        lexerJS.stdout.on("data", (data) => console.log(data.toString()))
-        lexerJS.on("close", () => {
-            const endTime = new Date();
-            console.log(`Total time taken: ${endTime - startTime}ms`);
         })
 
     })
-    .catch(err => console.log(err));
-
+    .then(() => {
+        let testFileList = utility.findJSFiles(tempDir + "/");
+        const startTime = new Date();
+        log(`Processing files...`);
+        LCSFinder(testFileList, cli.flags);
+        const endTime = new Date();
+        console.log(`Total time taken: ${endTime - startTime}ms`);
+    })
+    .catch(err => console.log(err))
 
 function checkCommitLength(fileName, callback) {
 
@@ -180,59 +172,33 @@ function checkCommitLength(fileName, callback) {
     const path = `https://api.github.com/repos/${ownerName}/${repoName}/commits?path=${fileName}`;
 
     console.log(`Processing ${fileName}`);
-
-    const iOpts = Object.assign({}, options, {
-        path: path
-    });
-
-    https.get(iOpts, (res) => {
-
-        if (res.statusCode !== 200) throw new Error(res.error);
-
-        let data = "";
-        res.on("data", (chunk => {
-            data += chunk;
-        }));
-        res.on("end", () => {
+    return utility.requestPromise(path, token)
+        .then(data => {
             const commitLength = JSON.parse(data).length;
             if (commitLength >= minCommits) {
                 callback(null, true)
             } else {
                 callback(null, false);
             }
-
         });
-    });
 }
 
-function downloadFile(sha) {
+function downloadFile(sha, callback) {
+
     log(`Downloading file for commit hash: ${sha.slice(0, 7)}`);
-
     const path = `https://api.github.com/repos/${ownerName}/${repoName}/contents/${fileList[0]}?ref=${sha}`;
+    const extra = "application/vnd.github.v3.raw";
 
-    const iOpts = Object.assign({}, options, {
-        path: path,
-        headers: Object.assign({}, options.headers, {
-            Accept: "application/vnd.github.v3.raw",
-        })
-    });
-
-    https.get(iOpts, (res) => {
-
-        if (res.statusCode !== 200) throw (res.error);
-
-        let data = "";
-        res.on("data", (chunk => {
-            data += chunk;
-        }));
-
-        res.on("end", () => {
-            // Complete
-            fs.writeFile(`${tempDir}/${fileList[0]}--${sha.slice(0, 7)}.js`, data)
-                .catch(err => { throw err });
+    return utility.requestPromise(path, token, { extra })
+        .then((data) => {
+            fs.outputFile(`${tempDir}/${fileList[0]}--${sha.slice(0, 7)}.js`, data)
+                .then(() => {
+                    callback(null, true);
+                })
+                .catch(() => {
+                    callback(null, false)
+                });
         });
-
-    });
 }
 
 function selectJSFiles(data) {

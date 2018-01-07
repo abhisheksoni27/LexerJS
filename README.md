@@ -63,7 +63,7 @@ function add(a, b){
 You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from [nodejs.org](https://nodejs.org) for your OS.)
 
 ```bash
-$ npm i -g lexer.js
+$ npm install -g lexer.js
 ```
 
 Or, if you prefer ***yarn***

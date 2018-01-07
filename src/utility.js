@@ -86,7 +86,7 @@ function saveCSV(data, name) {
     fileStream.once('open', function (fd) {
 
         fileStream.write("score,tokens,count,“sourcecode”\n");
-        
+
         data.forEach((item) => {
             let str = "";
             let del = ",";
@@ -100,7 +100,7 @@ function saveCSV(data, name) {
         });
         fileStream.end();
     });
-    
+
     return true;
 }
 
@@ -124,18 +124,20 @@ function randomValue(start, end) {
     return start + Math.round(Math.random() * end);
 }
 
-function requestPromise(path, token) {
+function requestPromise(path, token, extraOptions) {
 
     return new Promise((resolve, reject) => {
-
         if (!path) reject("Please provide a API path.");
 
-        const iOpts = Object.assign({}, options, {
+        const iOpts = {
+            ...options,
             path: path,
-            headers: Object.assign({}, options.headers, {
+            headers: {
+                ...options.headers,
                 Authorization: `token ${token}`,
-            })
-        });
+                Accept: extraOptions ? extraOptions.extra : "application/vnd.github.v3.json"
+            }
+        };
 
         https.get(iOpts, (res) => {
 
