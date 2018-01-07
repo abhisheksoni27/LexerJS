@@ -14,7 +14,7 @@ A lexical analyzer and longest common shared sequence finder between a list of J
 * [Result](#result)
 * [Options](#options)
 * [Running Examples](#running-examples)
-    - [Test-Github-Project](#test-github-project)
+    - [Test Github Project](#test-github-project)
 * [Tests](#tests)
 
 # What it does
