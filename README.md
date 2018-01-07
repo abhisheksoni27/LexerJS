@@ -160,12 +160,16 @@ The repo also contains a script to test lexerJS on any GitHub project. The scrip
 To run it, fire a terminal and run (assuming you are inside the project directory):
 
 ```bash
-node runGitHubExamples.js --owner OWNERNAME --repo REPONAME
+node runGitHubExamples.js --owner OWNERNAME --repo REPONAME -n 20
 ```
 
-where `OWNERNAME` and `REPONAME` have their usual meanings respectively.
+`OWNERNAME`: Owner of the repo [default: prettier]
 
-If you do not supply those arguments, [prettier.js](https://github.com/prettier/prettier) is selected automatically and **lexerJS** is run on it.
+`REPONAME`: Name of the repo [default: prettier]
+
+`n`: Minimum commits the selected file must have [default: 10]
+
+The results are saved in `result.json`. The command line [options](#options) for **lexerJS** can also be passed.
 
 # Tests
 
