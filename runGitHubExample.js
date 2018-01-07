@@ -45,6 +45,21 @@ const cli = meow(usageString, {
             type: "string",
             alias: "t"
         },
+        saveTokens: {
+            type: 'boolean',
+            alias: 's',
+            default: false
+        },
+        output: {
+            type: 'string',
+            alias: 'o',
+            default: 'json'
+        },
+        "output-file": {
+            type: 'string',
+            alias: 'f',
+            default: 'result'
+        },
         help: {
             alias: 'h'
         },
@@ -158,7 +173,8 @@ fs.emptyDir(tempDir)
         let testFileList = utility.findJSFiles(tempDir + "/");
         const startTime = new Date();
         log(`Processing files...`);
-        LCSFinder(testFileList, cli.flags);
+        const result = LCSFinder(testFileList, cli.flags);
+        utility.saveResult(result, cli.flags.f, cli.flags.output);
         const endTime = new Date();
         console.log(`Total time taken: ${endTime - startTime}ms`);
     })

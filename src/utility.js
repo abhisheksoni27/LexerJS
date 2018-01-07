@@ -129,15 +129,13 @@ function requestPromise(path, token, extraOptions) {
     return new Promise((resolve, reject) => {
         if (!path) reject("Please provide a API path.");
 
-        const iOpts = {
-            ...options,
+        const iOpts = Object.assign({}, options, {
             path: path,
-            headers: {
-                ...options.headers,
+            headers: Object.assign({}, options.headers, {
                 Authorization: `token ${token}`,
                 Accept: extraOptions ? extraOptions.extra : "application/vnd.github.v3.json"
-            }
-        };
+            })
+        });
 
         https.get(iOpts, (res) => {
 
