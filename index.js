@@ -93,11 +93,16 @@ function preProcessFiles() {
         // CSV file
         files = csv ? fileString.split("\n").slice(1) : JSON.parse(fileString).files;
 
-        files.forEach((fileName) => {
+        files.forEach((filePath) => {
+            let cleanedPath = filePath;
             // To remove the delimiter
-            cleanedName = csv ? fileName.substr(0, fileName.length - 1) : fileName;
+            
+            if(filePath.endsWith(",")){
+                cleanedPath = filePath.substr(0, filePath.length - 1);
+            }
+
             TokensOfFiles.push({
-                name: cleanedName, tokens: []
+                name: cleanedPath, tokens: []
             });
         });
     }
@@ -105,18 +110,12 @@ function preProcessFiles() {
     // Find tokens for each file
     TokensOfFiles.forEach((file, i) => {
 
-        try {
-            let fileString = fs.readFileSync(file.name).toString();
-            console.log(`Processing ${chalk.red(file.name)}.js, File ${chalk.green(i + 1)} out of ${chalk.blue(TokensOfFiles.length)}`)
-            file.tokens = tokenizer(fileString, false);
-        } catch (ReadError) {
-            // console.log(ReadError);
-            process.exit(1);
-        }
+        let fileString = fs.readFileSync(file.name).toString();
+        console.log(`Processing ${chalk.red(file.name)}.js, File ${chalk.green(i + 1)} out of ${chalk.blue(TokensOfFiles.length)}`)
+        file.tokens = tokenizer(fileString, false);
 
         if (saveTokens) {
-            console.log(`${tokenDir}/${file.name.split('/').pop()}.json`)
-            fs.writeFile(`${tokenDir}/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens)).catch(err=>console.log();
+            fs.writeFile(`${tokenDir}/${file.name.split('/').pop()}.json`, JSON.stringify(file.tokens)).catch(err => console.log(err));
         }
     });
 

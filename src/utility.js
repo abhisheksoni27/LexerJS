@@ -86,6 +86,7 @@ function saveCSV(data, name) {
     fileStream.once('open', function (fd) {
 
         fileStream.write("score,tokens,count,“sourcecode”\n");
+        
         data.forEach((item) => {
             let str = "";
             let del = ",";
@@ -98,10 +99,9 @@ function saveCSV(data, name) {
             fileStream.write(str);
         });
         fileStream.end();
-        return true;
     });
-
-    return false;
+    
+    return true;
 }
 
 function findJSFiles(dir, fileList) {
