@@ -12,7 +12,6 @@ let options = {
     method: 'GET',
     headers: {
         Accept: "application/vnd.github.v3.json",
-        Authorization: "token 07bebe6910646cac6448df4ed1faf13ca2d6b49c",
         'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
     },
 };
@@ -125,52 +124,17 @@ function randomValue(start, end) {
     return start + Math.round(Math.random() * end);
 }
 
-function getFileFromGithub(opts) {
-
-    if (!opts.ownerName || !opts.repoName || !opts.fileName) return;
-
-    return new Promise((resolve, reject) => {
-
-        const https = require('https');
-        let path = "";
-        if (opts.sha) {
-            path = `/repos/${opts.ownerName}/${opts.repoName}/contents/${opts.fileName}?ref=${opts.sha}`;
-        } else {
-            path = `/repos/${opts.ownerName}/${opts.repoName}/contents/${opts.fileName}`;
-        }
-
-        const options = {
-            host: 'api.github.com',
-            path: path,
-            method: 'GET',
-            headers: {
-                Accept: " application/vnd.github.v3.raw",
-                'user-agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)',
-            },
-        };
-
-        https.get(options, (res) => {
-            if (res.statusCode !== 200) reject("HTTP ERROR - " + res.statusCode);
-            let rawData = '';
-            res.on('data', (chunk) => { rawData += chunk; });
-            res.on("end", () => {
-                resolve(rawData);
-            });
-            res.on("error", (err) => { reject(err) });
-        });
-    });
-
-}
-
-
-function requestPromise(path) {
+function requestPromise(path, token) {
 
     return new Promise((resolve, reject) => {
 
         if (!path) reject("Please provide a API path.");
 
         const iOpts = Object.assign({}, options, {
-            path: path
+            path: path,
+            headers: Object.assign({}, options.headers, {
+                Authorization: `token ${token}`,
+            })
         });
 
         https.get(iOpts, (res) => {
@@ -210,7 +174,6 @@ module.exports = {
     saveCSV,
     findJSFiles,
     randomValue,
-    getFileFromGithub,
     requestPromise,
     shuffle
 }

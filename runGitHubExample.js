@@ -10,12 +10,13 @@ const chalk = require('chalk');
 const meow = require("meow");
 const usageString = `
 ${chalk.yellow("Usage")};
-$ node runGitHubExample.js [options]
+$ node runGitHubExample.js --token TOKEN [options]
 
 Options
 ${chalk.red("--owner")},  Owner of the repo (default: prettier)
 ${chalk.red("--repo")},  Name of the repo (default: prettier)
 ${chalk.red("--min-commit")}, -n Minimum commits the selected file must have (default: 10)
+${chalk.red("--token")}, -t GitHub OAuth token
 `;
 
 const cli = meow(usageString, {
@@ -52,6 +53,12 @@ const cli = meow(usageString, {
 const ownerName = cli.flags.owner;
 const repoName = cli.flags.repo;
 const minCommits = cli.flags.n;
+const token = cli.flags.t;
+
+if (!token) {
+    let error = new Error("Please supply an OAuth token for accessing GitHub's API");
+    throw error;
+}
 
 const log = console.log;
 const tempDir = ".lexerJSTemp";
@@ -70,20 +77,20 @@ let options = {
     method: "GET",
     headers: {
         Accept: "application/vnd.github.v3.json",
-        Authorization: `token ${cli.flags.token}`,
+        Authorization: `token ${token}`,
         "user-agent": "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)",
     },
 };
 
 log("Getting File List");
-utility.requestPromise(path)
+utility.requestPromise(path, token)
     .then((data) => {
 
         log(`File list has been received. Processing,`);
         selectJSFiles(data);
 
         log(`Total JS Files: ${fileList.length}`);
-        
+
         // Shuffle the file list so that differnt (and random) files are selected on every run.
         fileList = utility.shuffle(fileList);
         // This finds a file we can test. (based on maxCommits required)
@@ -120,7 +127,7 @@ utility.requestPromise(path)
 
         log("Processing Commits");
 
-        return utility.requestPromise(commitPath);
+        return utility.requestPromise(commitPath, token);
     })
     .catch(err => console.log(err))
     .then((res) => {
