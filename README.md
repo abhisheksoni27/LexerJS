@@ -55,12 +55,7 @@ As you can see below, that's what this program finds.
 
 ![Test file 1](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png)
 ![Test file 2](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png)
-<<<<<<< HEAD
-![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/results.png)
-=======
-
 ![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png)
->>>>>>> bfc9450b1280bec522d4d38931cd78f3b55d0215
 
 # Installation
 
