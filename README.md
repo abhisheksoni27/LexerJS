@@ -23,6 +23,8 @@ Suppose, you have two files with the same function but different function calls:
 
 **`test1.js`**
 
+<img alt="Test File 1" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png">
+
 ```js
 function add(a, b){
     return a + b;
@@ -32,6 +34,8 @@ const sum = add(11 + 11);
 ```
 
 **`test2.js`**
+
+<img alt="Test File 2" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png">
 
 ```js
 function add(a, b){
@@ -45,19 +49,14 @@ The longest common shared sequence between these two files is the *entire functi
 
 **LCSS**
 
+
+<img alt="Results" align="right" src ="https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png">
+
 ```js
 function add(a, b){
     return a + b;
 }
 ```
-
-As you can see below, that's what this program finds.
-
-![Test file 1](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test1.png)
- 
-![Test file 2](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/test2.png)
- 
-![Results](https://raw.githubusercontent.com/abhisheksoni27/LexerJS/master/src/assets/result.png)
 
 # Installation
 
