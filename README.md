@@ -62,7 +62,7 @@ function add(a, b){
 # Installation
 
 ### CLI
-You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from [nodejs.org](https://nodejs.org) for your OS.) `node.js > 5.0.0`
+You can download the module via ***npm***. (To install npm, which ships with node.js, you can download node from [nodejs.org](https://nodejs.org) for your OS.) `node.js > 6.x`
 
 ```bash
 $ npm install -g lexer.js
