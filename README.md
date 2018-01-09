@@ -161,7 +161,7 @@ lexer.js test.json -s
 lexer.js test.json -f YayTheResultsYay
 ```
 
-***Note:*** If you provide a file name with extension, such as `art.json`, then the output mode will be determined from the fileName and the output mode flag ( if passed) will be overriden.
+***Note:*** If you provide a file name with extension, such as `art.json`, then the output mode will be determined from the fileName and the output mode flag (if passed) will be overridden.
 
 # Running Examples
 
