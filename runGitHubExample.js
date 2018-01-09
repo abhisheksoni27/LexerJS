@@ -23,8 +23,8 @@ Options
 ${chalk.red("--owner")},  Owner of the repo (default: prettier)
 ${chalk.red("--repo")},  Name of the repo (default: prettier)
 ${chalk.red(
-  "--min-commit"
-)}, -n Minimum commits the selected file must have (default: 10)
+    "--min-commit"
+  )}, -n Minimum commits the selected file must have (default: 10)
 ${chalk.red("--token")}, -t GitHub OAuth token
 `;
 
@@ -83,9 +83,7 @@ const output = cli.flags.o;
 
 const tokenDir = path.join(process.cwd(), "tokens");
 if (saveTokens) {
-  fs.stat(tokenDir).catch(err => {
-    fs.mkdir(tokenDir);
-  });
+  fs.ensureDir(tokenDir);
 }
 
 if (!token) {
@@ -171,7 +169,7 @@ fs
     log(`Commits processed. Total commits: ${commits.length}`);
 
     return new Promise((resolve, reject) => {
-      async.every(commits, downloadFile, function(err, result) {
+      async.every(commits, downloadFile, function (err, result) {
         if (err) reject();
         resolve();
       });
@@ -209,7 +207,7 @@ function downloadFile(sha, callback) {
   log(`Downloading file for commit hash: ${sha.slice(0, 7)}`);
   const path = `https://api.github.com/repos/${ownerName}/${repoName}/contents/${
     fileList[0]
-  }?ref=${sha}`;
+    }?ref=${sha}`;
   const extra = "application/vnd.github.v3.raw";
 
   return utility.requestPromise(path, token, { extra }).then(data => {
