@@ -198,7 +198,7 @@ The repo also contains a script to test lexer.js on any GitHub project. The scri
 To run it, fire a terminal and run (assuming you are inside the project directory):
 
 ```bash
-node runGitHubExamples.js --owner OWNERNAME --repo REPONAME -n 20
+node runGitHubExamples.js -t TOKEN --owner OWNERNAME --repo REPONAME -n 20
 ```
 
 **`OWNERNAME`**: Owner of the repo `[default: prettier]`
@@ -207,7 +207,11 @@ node runGitHubExamples.js --owner OWNERNAME --repo REPONAME -n 20
 
 **`n`**: Minimum commits the selected file must have `[default: 10]`
 
+**`t`**: GitHub OAuth token `[Mandatory]`
+
 The results are saved in `result.json`. The command line [options](#options) for **lexer.js** can also be passed.
+
+The GitHub OAuth token is a required argument. To generate a Personal Access Token for testing, you can generate one here: [GitHub - Personal Access Token](https://github.com/settings/tokens)
 
 # Tests
 
