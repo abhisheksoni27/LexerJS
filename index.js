@@ -79,7 +79,7 @@ if (cli.input.length > 1) {
 
 } else {
 
-    const fileString = fs.readFileSync(cli.input[0]).toLocaleString(); // CSV File Contents
+    const fileString = fs.readFileSync(cli.input[0]).toString(); // CSV File Contents
     const ext = cli.input[0].split('.').pop();
 
     // Need to check if the input file is a single JS file.
