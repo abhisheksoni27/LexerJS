@@ -4,6 +4,7 @@
  */
 
 const utility = require("./utility");
+
 function lcs(seqA, seqB) {
   let longestCommonSequences = [];
 

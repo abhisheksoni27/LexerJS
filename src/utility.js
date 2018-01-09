@@ -171,7 +171,9 @@ function saveResult(result, outputFileName, ext) {
 function shuffle(collection) {
   for (let i = collection.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
-    [collection[i], collection[j]] = [collection[j], collection[i]];
+    const temp = collection[j];
+    collection[j] = collection[i];
+    collection[i] = temp;
   }
   return collection;
 }
