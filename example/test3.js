@@ -1,5 +1,5 @@
 function add(a, b) {
-    return a + b;
+  return a + b;
 }
 
-sum = add (10 + 20);
+sum = add(10 + 20);

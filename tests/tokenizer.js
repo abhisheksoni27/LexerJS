@@ -1,22 +1,22 @@
-const expect = require('expect.js');
-const tokenizer = require('../src/tokenizer.js');
+const expect = require("expect.js");
+const tokenizer = require("../src/tokenizer.js");
 
-describe('lexer.js - Tokenizer Check', () => {
-    it('should find all tokens', () => {
-        expect(tokenizer("const a += c;").length).equal(5);
-        expect(tokenizer("for int i = 0;").length).equal(6);
-        expect(tokenizer("const i = 0; i++;").length).equal(8);
-        expect(tokenizer("for int > i = 0;").length).equal(7);
-        expect(tokenizer("for int i = 0; \n i--;").length).equal(9);
-    });
+describe("lexer.js - Tokenizer Check", () => {
+  it("should find all tokens", () => {
+    expect(tokenizer("const a += c;").length).equal(5);
+    expect(tokenizer("for int i = 0;").length).equal(6);
+    expect(tokenizer("const i = 0; i++;").length).equal(8);
+    expect(tokenizer("for int > i = 0;").length).equal(7);
+    expect(tokenizer("for int i = 0; \n i--;").length).equal(9);
+  });
 
-    it('should ignore single-line comments', () => {
-        const tokens = tokenizer("//AWSOME\n\n for int i = 0; \n i--;");
-        expect(tokens.length).equal(9);
-    });
+  it("should ignore single-line comments", () => {
+    const tokens = tokenizer("//AWSOME\n\n for int i = 0; \n i--;");
+    expect(tokens.length).equal(9);
+  });
 
-    it('should ignore multi-line comments', () => {
-        const tokens = tokenizer(`/**
+  it("should ignore multi-line comments", () => {
+    const tokens = tokenizer(`/**
         * AWESOME
         * This is ignored
         */
@@ -26,22 +26,21 @@ describe('lexer.js - Tokenizer Check', () => {
         
         for(int i = 0;)
         `);
-        expect(tokens.length).equal(18);
-    });
+    expect(tokens.length).equal(18);
+  });
 
-    it('should detect other characters such as $, #, ! etc.', () => {
-        const tokens = tokenizer(`
+  it("should detect other characters such as $, #, ! etc.", () => {
+    const tokens = tokenizer(`
         'use strict';
         const chalk = require('bleh');
         
         console.log(chalk.hex('#ff6159')('test'));        
         `);
-        expect(tokens.length).equal(35);
-    });
+    expect(tokens.length).equal(35);
+  });
 
-    it(`should ignore line breaks`, () => {
-
-        const tokens = tokenizer(`
+  it(`should ignore line breaks`, () => {
+    const tokens = tokenizer(`
    
         var bleh = "?"
         var OPTIONS = [
@@ -63,6 +62,6 @@ describe('lexer.js - Tokenizer Check', () => {
             "output2"
         ];
         `);
-        expect(tokens.length).equal(75);
-    })
-})
+    expect(tokens.length).equal(75);
+  });
+});
